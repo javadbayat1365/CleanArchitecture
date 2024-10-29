@@ -47,7 +47,7 @@ public class AddEntityTests
         var description = "Test description";
         var title = "Ad name";
         Guid? userId = Guid.NewGuid();
-        Guid? categoryId = null;
+        Guid categoryId = Guid.Empty;
         Guid locationid = Guid.NewGuid();
 
         //Act
@@ -64,7 +64,7 @@ public class AddEntityTests
         var description = "Test description";
         var title = "Ad name";
         Guid? userId = null;
-        Guid? categoryId = Guid.NewGuid();
+        Guid categoryId = Guid.NewGuid();
         Guid locationid = Guid.Empty;
 
         //Act
@@ -81,7 +81,7 @@ public class AddEntityTests
         var description = "Test description";
         var title = "Ad name";
         Guid? userId = Guid.NewGuid();
-        Guid? categoryId = Guid.NewGuid();
+        Guid categoryId = Guid.NewGuid();
         var id = Guid.NewGuid();
         Guid locationid = Guid.NewGuid();
 
@@ -130,5 +130,22 @@ public class AddEntityTests
         ad.ChangeState(AdState.Approved);
 
         ad.ChangeState(AdState.Pending).Should().Be(new DomainResult(false, "Ad State Changed!"));
+    }
+
+    [Fact]
+    public void Should_Log_After_Editing_An_Ad()
+    {
+        //Arrange
+        Guid categoryid = Guid.NewGuid();
+        var locationid = Guid.NewGuid();
+        string title = "new title";
+        string description = "new description";
+        var userId = Guid.NewGuid();
+        //Act
+        var ad = AdEntitiy.Create(title,description,userId,categoryid,locationid);
+        
+        ad.Edit(title,description,categoryid,locationid);
+
+        ad.Logs.Should().HaveCountGreaterThan(1);
     }
 }

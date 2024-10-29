@@ -16,7 +16,7 @@ public class AdEntitiy : BaseEntity<Guid>
     public Guid? UserId { get;private set; }
     public IReadOnlyList<ImageValueObject> Images => _images.AsReadOnly();
     public IReadOnlyList<LogValueObject> Logs => _logs.AsReadOnly();
-    public Guid? CategoryId { get;private set; }
+    public Guid CategoryId { get;private set; }
     public Guid LocationId { get;private set; }
     public AdState CurrentState { get;private set; } 
 
@@ -42,7 +42,7 @@ public class AdEntitiy : BaseEntity<Guid>
     }
 
     private AdEntitiy() { }
-    public static AdEntitiy Create(string title,string description,Guid? userId,Guid? category,Guid? locationId) {
+    public static AdEntitiy Create(string title,string description,Guid? userId,Guid category,Guid? locationId) {
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(description);
 
@@ -67,7 +67,7 @@ public class AdEntitiy : BaseEntity<Guid>
         return ad;
     }
 
-    public static AdEntitiy Create(Guid? Id,string title, string description, Guid? userId, Guid? category, Guid? locationId)
+    public static AdEntitiy Create(Guid? Id,string title, string description, Guid? userId, Guid category, Guid? locationId)
     {
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(description);
@@ -92,6 +92,23 @@ public class AdEntitiy : BaseEntity<Guid>
         ad._logs.Add(new LogValueObject(DateTime.Now, "Ad Created!"));
 
         return ad;
+    }
+
+    public void Edit(string title,string description,Guid categotyId,Guid? locationId)
+    {
+        ArgumentNullException.ThrowIfNull(title);
+        ArgumentNullException.ThrowIfNull(description);
+
+        Guard.Against.NullOrEmpty(locationId, message: "Invalid Location Id");
+
+        this.CategoryId = categotyId;
+        this.Title = title;
+        this.Description = description; 
+        this.LocationId = locationId.Value;
+
+        this.ChangeState(AdState.Pending);
+
+        this._logs.Add(new LogValueObject(DateTime.Now,"the Ad is edited!"));
     }
 
 }
