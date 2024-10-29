@@ -1,17 +1,21 @@
-﻿using Domain.Common;
+﻿using Ardalis.GuardClauses;
+using Domain.Common;
 using Domain.Common.ValueObjects;
+using System.Runtime.CompilerServices;
 
 namespace Domain.Entities.Ad;
 
 public class AdEntitiy : BaseEntity<Guid>
 {
     private readonly List<ImageValueObject> _images = new();
+    private readonly List<LogValueObject> _logs = new();
 
     public Guid Id { get;private set; }
     public string Title { get;private set; }
     public string Description { get;private set; }
     public Guid? UserId { get;private set; }
-    public IReadOnlyList<ImageValueObject> Images => _images;
+    public IReadOnlyList<ImageValueObject> Images => _images.AsReadOnly();
+    public IReadOnlyList<LogValueObject> Logs => _logs.AsReadOnly();
     public Guid? CategoryId { get;private set; }
     public Guid LocationId { get;private set; }
     public AdState CurrentState { get;private set; } 
@@ -33,37 +37,21 @@ public class AdEntitiy : BaseEntity<Guid>
         }
 
         this.CurrentState = adState;
-
+        this._logs.Add(new LogValueObject(DateTime.Now, "Ad State Changed!"));
         return DomainResult.None;
     }
 
-    //factory method
     private AdEntitiy() { }
     public static AdEntitiy Create(string title,string description,Guid? userId,Guid? category,Guid? locationId) {
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(description);
 
 
-        //Ardelin.Guard Library
-        //Guard.Against.NullOrEmpty(userId,message:"Invalid User Id");
-        //Guard.Against.NullOrEmpty(category, message: "Invalid Category Id");
-        //Guard.Against.NullOrEmpty(locationId, message: "Invalid Location Id");
+        Guard.Against.NullOrEmpty(userId, message: "Invalid User Id");
+        Guard.Against.NullOrEmpty(category, message: "Invalid Category Id");
+        Guard.Against.NullOrEmpty(locationId, message: "Invalid Location Id");
 
-        if (locationId == null || locationId == Guid.Empty)
-        {
-            throw new InvalidOperationException("Location id must have a value!");
-        }
-
-        if (userId == null || userId == Guid.Empty)
-        {
-            throw new InvalidOperationException("User id must have a value!");
-        }
-        if (category == null || category == Guid.Empty)
-        {
-            throw new InvalidOperationException("Category must have a value!");
-        }
-
-        return new AdEntitiy()
+        var ad = new AdEntitiy()
         {
             CategoryId = category,
             Title = title,
@@ -73,6 +61,10 @@ public class AdEntitiy : BaseEntity<Guid>
             CurrentState = AdState.Pending,
             LocationId = locationId.Value
         };
+
+        ad._logs.Add(new LogValueObject(DateTime.Now,"Ad Created!"));
+
+        return ad;
     }
 
     public static AdEntitiy Create(Guid? Id,string title, string description, Guid? userId, Guid? category, Guid? locationId)
@@ -80,29 +72,13 @@ public class AdEntitiy : BaseEntity<Guid>
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(description);
 
-        //Ardelin.Guard Library
-        //Guard.Against.NullOrEmpty(userId,message:"Invalid User Id");
-        //Guard.Against.NullOrEmpty(Id,message:"Invalid Id");
-        //Guard.Against.NullOrEmpty(category, message: "Invalid Category Id");
-        //Guard.Against.NullOrEmpty(locationId, message: "Invalid Location Id");
+        Guard.Against.NullOrEmpty(userId, message: "Invalid User Id");
+        Guard.Against.NullOrEmpty(Id, message: "Invalid Id");
+        Guard.Against.NullOrEmpty(category, message: "Invalid Category Id");
+        Guard.Against.NullOrEmpty(locationId, message: "Invalid Location Id");
 
-        if (locationId == null || locationId == Guid.Empty)
-        {
-            throw new InvalidOperationException("Location id must have a value!");
-        }
-        if (userId == null || userId == Guid.Empty)
-        {
-            throw new InvalidOperationException("User id must have a value!");
-        }
-        if (category == null || category == Guid.Empty)
-        {
-            throw new InvalidOperationException("Category must have a value!");
-        }
-        if (Id == null || Id == Guid.Empty)
-        {
-            throw new InvalidOperationException("Id must have a value!");
-        }
-        return new AdEntitiy()
+        
+        var ad = new AdEntitiy()
         {
             CategoryId = category,
             Title = title,
@@ -112,6 +88,10 @@ public class AdEntitiy : BaseEntity<Guid>
             CurrentState = AdState.Pending,
             LocationId = locationId.Value
         };
+
+        ad._logs.Add(new LogValueObject(DateTime.Now, "Ad Created!"));
+
+        return ad;
     }
 
 }
