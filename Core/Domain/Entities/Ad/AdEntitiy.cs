@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace Domain.Entities.Ad;
 
-public class AdEntitiy : BaseEntity<Guid>
+public sealed class AdEntitiy : BaseEntity<Guid>
 {
     private readonly List<ImageValueObject> _images = new();
     private readonly List<LogValueObject> _logs = new();

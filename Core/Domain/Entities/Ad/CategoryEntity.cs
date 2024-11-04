@@ -2,7 +2,7 @@
 
 namespace Domain.Entities.Ad;
 
-public class CategoryEntity:BaseEntity<Guid>
+public sealed class CategoryEntity:BaseEntity<Guid>
 {
     public string Name { get;private set; }
 

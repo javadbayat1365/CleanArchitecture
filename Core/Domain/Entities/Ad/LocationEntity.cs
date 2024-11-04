@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities.Ad;
 
-public class LocationEntity
+public sealed class LocationEntity
 {
     public string Name { get;private set; }
 
