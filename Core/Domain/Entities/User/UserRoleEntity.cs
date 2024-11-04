@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities.User;
 
-public class UserRoleEntity : IdentityUserRole<Guid>, IEntity
+public sealed class UserRoleEntity : IdentityUserRole<Guid>, IEntity
 {
     public DateTime CreateDate { get; set ; }
     public DateTime? ModifiedDate { get; set ; }

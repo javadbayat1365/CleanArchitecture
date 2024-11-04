@@ -17,8 +17,10 @@ public sealed class UserEntity : IdentityUser<Guid>, IEntity
     private List<AdEntitiy> _ads = new();
 
     public IReadOnlyList<AdEntitiy> ads => _ads.AsReadOnly();
-
-
+    public ICollection<UserRoleEntity> UserRoles { get; set; }
+    public ICollection<UserClaimEntity>  UserClaims { get; set; }
+    public ICollection<UserLoginEntity> UserLogins  { get; set; }
+    public ICollection<UserTokenEntity> UserTokens  { get; set; }
     public UserEntity(string firstName, string lastName,string userName,string email):base(userName)
     {
         FirstName = firstName;
