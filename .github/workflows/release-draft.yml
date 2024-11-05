@@ -13,8 +13,8 @@ jobs:
   update_relwase_draft:
     permissions:
       contents: write
-      pull_requests: write
-    runs-on: ubuntu_latest
+      pull-requests: write
+    runs-on: ubuntu-latest
     steps:
       - uses: release-drafter/release-drafter@v6
         env:
