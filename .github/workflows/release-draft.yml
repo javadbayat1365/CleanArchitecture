@@ -1,0 +1,21 @@
+name: Release Draft
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [Merged]
+permissions:
+  contents: read
+
+jobs:
+  update_relwase_draft:
+    permissinos:
+      contents: write
+      pull_requests: write
+    runs-on: ubuntu_latest
+    steps:
+      - uses: release-drafter/release-drafter@v6
+        env:
+          GITHUB_TOKEN: @{{ sercrets.GITHUB_TOKEN }}          
