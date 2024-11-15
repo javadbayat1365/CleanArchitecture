@@ -16,7 +16,7 @@ internal class RegisterUserCommandHandler(IUserManager userManager) : IRequestHa
         if (!validationResult.IsValid)
             return OperationResult<bool>.FailureResult(validationResult.Errors.ConvertToKeyValuepair());
 
-        var userCreateResult = await userManager.CreateAsync(
+        var userCreateResult = await userManager.PasswordCreateAsync(
             new Domain.Entities.User.UserEntity(
                 request.FirstName,
                 request.LastName,
@@ -24,7 +24,10 @@ internal class RegisterUserCommandHandler(IUserManager userManager) : IRequestHa
                 request.Email) { PhoneNumber = request.PhoneNumber }, cancellationToken);
 
         if (userCreateResult.Succeeded)
+        {
             return OperationResult<bool>.SuccessResult(true);
+            //TODO Send Confirmation Notification To User
+        }
 
         return OperationResult<bool>.FailureResult(userCreateResult.Errors.ConvertToKeyValuePair());
     }
