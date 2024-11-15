@@ -28,6 +28,15 @@ public class OperationResult<TResult> : IOperatoinResult
         return result;
     }
 
+    public static OperationResult<TResult> FailureResult(List<KeyValuePair<string,string>> Failures)
+    {
+        return new OperationResult<TResult>()
+        {
+            Result = default,
+            ErrorMessages = Failures
+        };
+    }
+
     public static OperationResult<TResult> NotFoundResult(string propertyName, string message)
     {
         var result = new OperationResult<TResult>()
