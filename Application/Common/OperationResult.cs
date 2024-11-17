@@ -18,7 +18,7 @@ public class OperationResult<TResult> : IOperatoinResult
     {
         return new OperationResult<TResult> { Result = result, IsSuccess = true };
     }
-    public static OperationResult<TResult> FailureResult(string propertyName,string message)
+    public static OperationResult<TResult> FailureResult(string propertyName,string message="")
     {
         var result = new OperationResult<TResult>()
         {
