@@ -1,7 +1,6 @@
 ﻿using Domain.Common;
 using Domain.Entities.Ad;
 using Microsoft.AspNetCore.Identity;
-using System.Transactions;
 
 namespace Domain.Entities.User;
 

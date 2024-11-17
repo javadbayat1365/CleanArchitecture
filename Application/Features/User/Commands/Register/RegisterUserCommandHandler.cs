@@ -21,7 +21,7 @@ internal class RegisterUserCommandHandler(IUserManager userManager) : IRequestHa
                 request.FirstName,
                 request.LastName,
                 request.UserName,
-                request.Email) { PhoneNumber = request.PhoneNumber }, cancellationToken);
+                request.Email) { PhoneNumber = request.PhoneNumber },request.Password, cancellationToken);
 
         if (userCreateResult.Succeeded)
         {

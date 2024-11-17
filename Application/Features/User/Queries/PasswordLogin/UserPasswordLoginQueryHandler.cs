@@ -21,9 +21,9 @@ public class UserPasswordLoginQueryHandler(IUserManager userManager,IJwtService 
             : await userManager.GetUserByUserNameAsync(request.UserNameOrEmail, cancellationToken);
 
         if (user is null)
-            return OperationResult<JwtAccessTokenModel>.FailureResult(nameof(UserPasswordLoginQuery.UserNameOrEmail),"User Not Found!");
+            return OperationResult<JwtAccessTokenModel>.NotFoundResult(nameof(UserPasswordLoginQuery.UserNameOrEmail),"User Not Found!");
 
-        var passwordValidation = await userManager.PasswordCreateAsync(user, cancellationToken);
+        var passwordValidation = await userManager.PasswordCreateAsync(user,request.Password, cancellationToken);
         if(passwordValidation.Succeeded)
         {
             var JwtAccessTokenModel =await jwtService.GetJwtAccessTokenAsync(user,cancellationToken);
