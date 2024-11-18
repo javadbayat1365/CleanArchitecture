@@ -2,6 +2,8 @@
 using Application.Features.User.Commands.Register;
 using Bogus;
 using Domain.Entities.User;
+using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using NSubstitute;
 using Xunit;
 
@@ -15,7 +17,7 @@ public class UserFeaturesTests
         //Arrange
         var faker = new Faker();
         var password = faker.Random.String(10);
-        var loginUserRequest = new RegisterUserCommand(
+        var registerUserRequest = new RegisterUserCommand(
             faker.Person.FirstName,
             faker.Person.LastName,
             faker.Person.UserName,
@@ -25,10 +27,17 @@ public class UserFeaturesTests
             password);
 
         var userManager = Substitute.For<IUserManager>();
-        var userEntity = new UserEntity();
-        userManager.PasswordCreateAsync();
+
+        userManager
+            .PasswordCreateAsync(Substitute.For<UserEntity>().ReceivedWithAnyArgs(),password, CancellationToken.None)
+            .Returns(IdentityResult.Success);
         //Act
 
-        //
+        var userRegisterCommandHandler = new RegisterUserCommandHandler(userManager);
+
+        var userRegisterResult = await userRegisterCommandHandler.Handle(registerUserRequest,CancellationToken.None);
+
+        userRegisterResult.IsSuccess.Should().BeTrue();
+        
     }
 }
