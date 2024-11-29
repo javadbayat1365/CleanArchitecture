@@ -10,7 +10,6 @@ public sealed class AdEntitiy : BaseEntity<Guid>
     private readonly List<ImageValueObject> _images = new();
     private readonly List<LogValueObject> _logs = new();
 
-    public Guid Id { get;private set; }
     public string Title { get;private set; }
     public string Description { get;private set; }
     public Guid? UserId { get;private set; }
@@ -36,17 +35,17 @@ public sealed class AdEntitiy : BaseEntity<Guid>
             return new DomainResult(false,"This ad is already approved!");
         }
 
-        this.CurrentState = adState;
-        this._logs.Add(new LogValueObject(DateTime.Now, "Ad State Changed!"));
+        CurrentState = adState;
+        _logs.Add(new LogValueObject(DateTime.Now, "Ad State Changed!"));
         return DomainResult.None;
     }
 
     private AdEntitiy() { }
     public static AdEntitiy Create(string title,string description,Guid? userId,Guid category,Guid? locationId) {
+        //This
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(description);
-
-
+        //Or
         Guard.Against.NullOrEmpty(userId, message: "Invalid User Id");
         Guard.Against.NullOrEmpty(category, message: "Invalid Category Id");
         Guard.Against.NullOrEmpty(locationId, message: "Invalid Location Id");
@@ -101,14 +100,16 @@ public sealed class AdEntitiy : BaseEntity<Guid>
 
         Guard.Against.NullOrEmpty(locationId, message: "Invalid Location Id");
 
-        this.CategoryId = categotyId;
-        this.Title = title;
-        this.Description = description; 
-        this.LocationId = locationId.Value;
+        CategoryId = categotyId;
+        Title = title;
+        Description = description; 
+        LocationId = locationId.Value;
 
-        this.ChangeState(AdState.Pending);
-
-        this._logs.Add(new LogValueObject(DateTime.Now,"the Ad is edited!"));
+        var domainResult = ChangeState(AdState.Pending);
+        if(domainResult.IsSuccess)
+        _logs.Add(new LogValueObject(DateTime.Now,"the Ad is edited!"));
+        else
+        _logs.Add(new LogValueObject(DateTime.Now,domainResult.Message));
     }
 
 }

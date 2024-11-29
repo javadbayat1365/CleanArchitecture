@@ -29,7 +29,7 @@ public class UserFeaturesTests
         var userManager = Substitute.For<IUserManager>();
 
         userManager
-            .PasswordCreateAsync(Substitute.For<UserEntity>().ReceivedWithAnyArgs(),password, CancellationToken.None)
+            .CreateByPasswordAsync(Substitute.For<UserEntity>().ReceivedWithAnyArgs(),password, CancellationToken.None)
             .Returns(IdentityResult.Success);
         //Act
 

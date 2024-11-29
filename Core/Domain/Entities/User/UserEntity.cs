@@ -1,4 +1,5 @@
-﻿using Domain.Common;
+﻿using Ardalis.GuardClauses;
+using Domain.Common;
 using Domain.Entities.Ad;
 using Microsoft.AspNetCore.Identity;
 
