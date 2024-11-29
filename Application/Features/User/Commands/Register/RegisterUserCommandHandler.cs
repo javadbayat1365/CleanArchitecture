@@ -32,3 +32,4 @@ public class RegisterUserCommandHandler(IUserManager userManager) : IRequestHand
         return OperationResult<bool>.FailureResult(userCreateResult.Errors.ConvertToKeyValuePair());
     }
 }
+    
