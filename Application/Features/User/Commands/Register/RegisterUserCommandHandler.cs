@@ -16,7 +16,7 @@ public class RegisterUserCommandHandler(IUserManager userManager) : IRequestHand
         if (!validationResult.IsValid)
             return OperationResult<bool>.FailureResult(validationResult.Errors.ConvertToKeyValuepair());
 
-        var userCreateResult = await userManager.PasswordCreateAsync(
+        var userCreateResult = await userManager.CreateByPasswordAsync(
             new Domain.Entities.User.UserEntity(
                 request.FirstName,
                 request.LastName,

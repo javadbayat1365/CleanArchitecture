@@ -22,7 +22,8 @@ public class OperationResult<TResult> : IOperatoinResult
     {
         var result = new OperationResult<TResult>()
         {
-            Result = default
+            Result = default,
+            IsSuccess = false
         };
         result.ErrorMessages.Add(new KeyValuePair<string, string>(propertyName,message));
         return result;
@@ -33,6 +34,7 @@ public class OperationResult<TResult> : IOperatoinResult
         return new OperationResult<TResult>()
         {
             Result = default,
+            IsSuccess = false,
             ErrorMessages = Failures
         };
     }
