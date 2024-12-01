@@ -26,7 +26,7 @@ public class UserPasswordLoginQueryHandler(IUserManager userManager,IJwtService 
         var passwordValidation = await userManager.CreateByPasswordAsync(user,request.Password, cancellationToken);
         if(passwordValidation.Succeeded)
         {
-            var JwtAccessTokenModel =await jwtService.GetJwtAccessTokenAsync(user,cancellationToken);
+            var JwtAccessTokenModel =await jwtService.GenerateTokenAsync(user,cancellationToken);
             return OperationResult<JwtAccessTokenModel>.SuccessResult(JwtAccessTokenModel);
         }
 
