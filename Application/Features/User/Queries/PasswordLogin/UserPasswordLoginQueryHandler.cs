@@ -30,6 +30,6 @@ public class UserPasswordLoginQueryHandler(IUserManager userManager,IJwtService 
             return OperationResult<JwtAccessTokenModel>.SuccessResult(JwtAccessTokenModel);
         }
 
-        return OperationResult<JwtAccessTokenModel>.FailureResult(passwordValidation.Errors.ConvertToKeyValuePair());
+        return OperationResult<JwtAccessTokenModel>.FailureResult(nameof(request.Password),"Incorrect Password!");
     }
 }
