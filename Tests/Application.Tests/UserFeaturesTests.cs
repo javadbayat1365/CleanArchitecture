@@ -184,7 +184,7 @@ namespace Application.Tests
         }
 
         [Fact]
-        public async Task Login_User_Should_Be_Success()
+        public async Task Login_UserName_Should_Be_Success()
         {
             //Arrange
             var faker = new Faker();
@@ -250,6 +250,76 @@ namespace Application.Tests
 
             loginResult.Result.Should().BeNull();
             loginResult.IsSuccess.Should().BeFalse();
+            testOutputHelper.WriteLineOperationResultErrors(loginResult);
+        }
+
+        [Fact]
+        public async Task Login_With_Email_Should_Be_Success() 
+        {
+            //Arrange
+            var faker = new Faker();
+            var loginQuery = new UserPasswordLoginQuery(faker.Person.Email, Guid.NewGuid().ToString("N"));
+            var userManager = Substitute.For<IUserManager>();
+            var jwtService = Substitute.For<IJwtService>();
+            var userEntity = new UserEntity(
+                faker.Person.FirstName,
+                faker.Person.LastName,
+                faker.Person.UserName,
+                faker.Person.Email
+                )
+            { PhoneNumber = "0936" };
+
+            userManager.GetUserByEmailAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
+                             .Returns(Task.FromResult<UserEntity?>(userEntity));
+
+            userManager.CreateByPasswordAsync(userEntity, loginQuery.Password, CancellationToken.None)
+                             .Returns(Task.FromResult(IdentityResult.Success));
+
+            jwtService.GenerateTokenAsync(userEntity, CancellationToken.None)
+                            .Returns(Task.FromResult(new JwtAccessTokenModel("AccessToken", 3000)));
+
+            //Act
+            var userLoginQueryHandler = new UserPasswordLoginQueryHandler(userManager, jwtService);
+
+            var loginResult = await userLoginQueryHandler.Handle(loginQuery, CancellationToken.None);
+
+            loginResult.Result.Should().NotBeNull();
+            loginResult.IsSuccess.Should().BeTrue();
+
+        }
+
+        [Fact]
+        public async Task Login_With_Null_User_Should_Be_Faile()
+        {
+            //Arrange
+            var faker = new Faker();
+            var loginQuery = new UserPasswordLoginQuery(faker.Person.Email, Guid.NewGuid().ToString("N"));
+            var userManager = Substitute.For<IUserManager>();
+            var jwtService = Substitute.For<IJwtService>();
+            var userEntity = new UserEntity(
+                faker.Person.FirstName,
+                faker.Person.LastName,
+                faker.Person.UserName,
+                faker.Person.Email
+                )
+            { PhoneNumber = "0936" };
+
+            userManager.GetUserByEmailAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
+                             .Returns(Task.FromResult<UserEntity?>(null));
+
+            userManager.CreateByPasswordAsync(userEntity, loginQuery.Password, CancellationToken.None)
+                             .Returns(Task.FromResult(IdentityResult.Success));
+
+            jwtService.GenerateTokenAsync(userEntity, CancellationToken.None)
+                            .Returns(Task.FromResult(new JwtAccessTokenModel("AccessToken", 3000)));
+
+            //Act
+            var userLoginQueryHandler = new UserPasswordLoginQueryHandler(userManager, jwtService);
+
+            var loginResult = await userLoginQueryHandler.Handle(loginQuery, CancellationToken.None);
+
+            loginResult.Result.Should().BeNull();
+            loginResult.IsNotFound.Should().BeTrue();
             testOutputHelper.WriteLineOperationResultErrors(loginResult);
         }
     }
