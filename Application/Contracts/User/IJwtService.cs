@@ -5,5 +5,5 @@ namespace Application.Contracts.User;
 
 public interface IJwtService
 {
-    Task<JwtAccessTokenModel> GetJwtAccessTokenAsync(UserEntity user,CancellationToken cancellationToken);
+    Task<JwtAccessTokenModel> GenerateTokenAsync(UserEntity user,CancellationToken cancellationToken);
 }
