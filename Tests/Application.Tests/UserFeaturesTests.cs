@@ -1,4 +1,4 @@
-using Application.Common;
+using Application.Tests.Extensions;
 using Application.Contracts.User;
 using Application.Features.User.Commands.Register;
 using Bogus;
@@ -6,18 +6,18 @@ using Domain.Entities.User;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
+using Xunit.Abstractions;
 
 namespace Application.Tests
 {
-    public class AddEntityTests
+    public class UserFeaturesTests(ITestOutputHelper testOutputHelper)
     {
         [Fact]
         public async Task Creating_New_User_Should_Be_Success()
         {
             //Arrange
             var faker = new Faker();
-            var password = faker.Random.String(10);
+            var password = Guid.NewGuid().ToString("N");
             var registerUserRequest = new RegisterUserCommand(
                 faker.Person.FirstName,
                 faker.Person.LastName,
@@ -41,6 +41,7 @@ namespace Application.Tests
             //assert
             userRegisterResult.IsSuccess.Should().BeTrue();
 
+            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
         }
 
         [Fact]
@@ -51,7 +52,7 @@ namespace Application.Tests
             var password = faker.Random.String(10);
             var user = new RegisterUserCommand(
                 faker.Person.FirstName,
-                faker.Person.LastName,
+                faker.Person.LastName, 
                 string.Empty,
                 faker.Person.Email,
                 faker.Person.Phone,
@@ -68,6 +69,7 @@ namespace Application.Tests
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
+            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
         }
         [Fact]
         public async Task Creating_User_Should_Be_False_If_We_Pass_Null_FirstName()
@@ -94,6 +96,7 @@ namespace Application.Tests
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
+            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
         }
         [Fact]
         public async Task Creating_User_Should_Be_False_If_We_Pass_Null_LastName()
@@ -120,6 +123,7 @@ namespace Application.Tests
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
+            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
         }
         [Fact]
         public async Task Creating_User_Should_Be_False_If_We_Pass_Not_Equal_Password_And_RepeatPassword()
@@ -129,7 +133,7 @@ namespace Application.Tests
             var password = faker.Random.String(10);
             var repeatPassword = faker.Random.String(10);
             var user = new RegisterUserCommand(
-                string.Empty,
+                faker.Person.FirstName,
                 faker.Person.LastName,
                 faker.Person.UserName,
                 faker.Person.Email,
@@ -147,6 +151,32 @@ namespace Application.Tests
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
+            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
+        }
+
+        [Fact]
+        public async void Creating_User_Should_Be_False_If_PhoneNumber_Is_Not_Number()
+        {
+            var faker = new Faker();
+            var password = Guid.NewGuid().ToString("N");
+            var userManager = Substitute.For<IUserManager>();
+            var registerUserCommand = new RegisterUserCommand(
+                 faker.Person.FirstName,
+                 faker.Person.LastName,
+                 faker.Person.UserName,
+                 faker.Person.Email,
+                 "test",
+                 password,password);
+
+            await userManager.CreateByPasswordAsync(Arg.Any<UserEntity>(), password, CancellationToken.None);
+
+            var registerUserCommandHandler = new RegisterUserCommandHandler(userManager);
+
+            var result = await registerUserCommandHandler.Handle(registerUserCommand, CancellationToken.None);
+
+            result.IsSuccess.Should().BeFalse();
+
+            testOutputHelper.WriteLineOperationResultErrors(result);
         }
     }
 }
