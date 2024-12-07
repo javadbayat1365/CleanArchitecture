@@ -10,6 +10,7 @@ using Xunit.Abstractions;
 using Xunit.Sdk;
 using Application.Features.User.Queries.PasswordLogin;
 using Application.Contracts.User.Models;
+using Application.Common;
 
 namespace Application.Tests
 {
@@ -68,7 +69,10 @@ namespace Application.Tests
             usermanager.CreateByPasswordAsync(Arg.Any<UserEntity>(),user.Password,CancellationToken.None)
                               .Returns(Task.FromResult(IdentityResult.Success));
             //act
-            var userRegisterResult =await handler.Handle(user, CancellationToken.None);
+            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>(new RegisterUserCommand_Validator());
+
+            var userRegisterResult = await validationBehavior.Handle(user, CancellationToken.None, handler.Handle);
+            //var userRegisterResult =await handler.Handle(user, CancellationToken.None);
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
@@ -95,7 +99,10 @@ namespace Application.Tests
             usermanager.CreateByPasswordAsync(Arg.Any<UserEntity>(), user.Password, CancellationToken.None)
                               .Returns(Task.FromResult(IdentityResult.Success));
             //act
-            var userRegisterResult = await handler.Handle(user, CancellationToken.None);
+            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>(new RegisterUserCommand_Validator());
+
+            var userRegisterResult = await validationBehavior.Handle(user, CancellationToken.None, handler.Handle);
+            //var userRegisterResult = await handler.Handle(user, CancellationToken.None);
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
@@ -122,7 +129,10 @@ namespace Application.Tests
             usermanager.CreateByPasswordAsync(Arg.Any<UserEntity>(), user.Password, CancellationToken.None)
                               .Returns(Task.FromResult(IdentityResult.Success));
             //act
-            var userRegisterResult = await handler.Handle(user, CancellationToken.None);
+            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>(new RegisterUserCommand_Validator());
+
+            var userRegisterResult = await validationBehavior.Handle(user, CancellationToken.None, handler.Handle);
+            //var userRegisterResult = await handler.Handle(user, CancellationToken.None);
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
@@ -151,7 +161,9 @@ namespace Application.Tests
             usermanager.CreateByPasswordAsync(Arg.Any<UserEntity>(), user.Password, CancellationToken.None)
                               .Returns(Task.FromResult(IdentityResult.Success));
             //act
-            var userRegisterResult = await handler.Handle(user, CancellationToken.None);
+            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>(new RegisterUserCommand_Validator());
+
+            var userRegisterResult = await validationBehavior.Handle(user, CancellationToken.None, handler.Handle);
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
@@ -176,11 +188,13 @@ namespace Application.Tests
 
             var registerUserCommandHandler = new RegisterUserCommandHandler(userManager);
 
-            var result = await registerUserCommandHandler.Handle(registerUserCommand, CancellationToken.None);
+            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand,OperationResult<bool>>(new RegisterUserCommand_Validator());
 
-            result.IsSuccess.Should().BeFalse();
+            var userRegisterResult = await validationBehavior.Handle(registerUserCommand,CancellationToken.None,registerUserCommandHandler.Handle);
 
-            testOutputHelper.WriteLineOperationResultErrors(result);
+            userRegisterResult.IsSuccess.Should().BeFalse();
+
+            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
         }
 
         [Fact]
@@ -277,12 +291,12 @@ namespace Application.Tests
 
             jwtService.GenerateTokenAsync(userEntity, CancellationToken.None)
                             .Returns(Task.FromResult(new JwtAccessTokenModel("AccessToken", 3000)));
-
-            //Act
             var userLoginQueryHandler = new UserPasswordLoginQueryHandler(userManager, jwtService);
 
+            //Act
             var loginResult = await userLoginQueryHandler.Handle(loginQuery, CancellationToken.None);
 
+            //Assert
             loginResult.Result.Should().NotBeNull();
             loginResult.IsSuccess.Should().BeTrue();
 

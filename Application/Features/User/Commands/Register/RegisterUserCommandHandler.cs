@@ -10,11 +10,11 @@ public class RegisterUserCommandHandler(IUserManager userManager) : IRequestHand
 
     public async ValueTask<OperationResult<bool>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        var validator = new RegisterUserCommand_Validator();
-        var validationResult = validator.Validate(request);
+        //var validator = new RegisterUserCommand_Validator();
+        //var validationResult = await validator.ValidateAsync(request,cancellationToken);
 
-        if (!validationResult.IsValid)
-            return OperationResult<bool>.FailureResult(validationResult.Errors.ConvertToKeyValuepair());
+        //if (!validationResult.IsValid)
+        //    return OperationResult<bool>.FailureResult(validationResult.Errors.ConvertToKeyValuepair());
 
         var userCreateResult = await userManager.CreateByPasswordAsync(
             new Domain.Entities.User.UserEntity(
