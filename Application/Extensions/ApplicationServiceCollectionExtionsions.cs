@@ -1,4 +1,5 @@
 ﻿using Application.Common.Validation;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Extensions;
@@ -28,7 +29,16 @@ public static class ApplicationServiceCollectionExtionsions
             if (validationModelBase is null)
                 continue;
 
-            var validator = requstMethodInfo.Invoke(requestModel, new[] { validationModelBase});
+            var validator = requstMethodInfo?.Invoke(requestModel, new[] { validationModelBase});
+            if (validator is null)
+                continue;
+            var validatorInterfaces = validator.GetType()
+                .GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IValidator<>));
+            if (validatorInterfaces is null)
+                continue;
+
+            services.AddTransient(validatorInterfaces,_=> validator);
         }
 
         return services;
