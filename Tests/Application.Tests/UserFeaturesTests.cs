@@ -11,11 +11,25 @@ using Xunit.Sdk;
 using Application.Features.User.Queries.PasswordLogin;
 using Application.Contracts.User.Models;
 using Application.Common;
+using Microsoft.Extensions.DependencyInjection;
+using Application.Extensions;
+using FluentValidation;
 
 namespace Application.Tests
 {
-    public class UserFeaturesTests(ITestOutputHelper testOutputHelper)
+    public class UserFeaturesTests
     {
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public UserFeaturesTests(ITestOutputHelper testOutputHelper) 
+        {
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.RegisterApplicationValidators();
+            _serviceProvider = serviceCollection.BuildServiceProvider();
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public async Task Creating_New_User_Should_Be_Success()
         {
@@ -45,7 +59,7 @@ namespace Application.Tests
             //assert
             userRegisterResult.IsSuccess.Should().BeTrue();
 
-            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
+            _testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
         }
 
         [Fact]
@@ -69,14 +83,15 @@ namespace Application.Tests
             usermanager.CreateByPasswordAsync(Arg.Any<UserEntity>(),user.Password,CancellationToken.None)
                               .Returns(Task.FromResult(IdentityResult.Success));
             //act
-            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>(new RegisterUserCommand_Validator());
+            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>
+                (_serviceProvider.GetRequiredService<IValidator<RegisterUserCommand>>());
 
             var userRegisterResult = await validationBehavior.Handle(user, CancellationToken.None, handler.Handle);
             //var userRegisterResult =await handler.Handle(user, CancellationToken.None);
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
-            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
+            _testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
         }
         [Fact]
         public async Task Creating_User_Should_Be_False_If_We_Pass_Null_FirstName()
@@ -99,14 +114,15 @@ namespace Application.Tests
             usermanager.CreateByPasswordAsync(Arg.Any<UserEntity>(), user.Password, CancellationToken.None)
                               .Returns(Task.FromResult(IdentityResult.Success));
             //act
-            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>(new RegisterUserCommand_Validator());
+            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>
+                (_serviceProvider.GetRequiredService<IValidator<RegisterUserCommand>>());
 
             var userRegisterResult = await validationBehavior.Handle(user, CancellationToken.None, handler.Handle);
             //var userRegisterResult = await handler.Handle(user, CancellationToken.None);
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
-            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
+            _testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
         }
         [Fact]
         public async Task Creating_User_Should_Be_False_If_We_Pass_Null_LastName()
@@ -129,14 +145,15 @@ namespace Application.Tests
             usermanager.CreateByPasswordAsync(Arg.Any<UserEntity>(), user.Password, CancellationToken.None)
                               .Returns(Task.FromResult(IdentityResult.Success));
             //act
-            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>(new RegisterUserCommand_Validator());
+            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>
+                (_serviceProvider.GetRequiredService<IValidator<RegisterUserCommand>>());
 
             var userRegisterResult = await validationBehavior.Handle(user, CancellationToken.None, handler.Handle);
             //var userRegisterResult = await handler.Handle(user, CancellationToken.None);
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
-            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
+            _testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
         }
         [Fact]
         public async Task Creating_User_Should_Be_False_If_We_Pass_Not_Equal_Password_And_RepeatPassword()
@@ -161,13 +178,14 @@ namespace Application.Tests
             usermanager.CreateByPasswordAsync(Arg.Any<UserEntity>(), user.Password, CancellationToken.None)
                               .Returns(Task.FromResult(IdentityResult.Success));
             //act
-            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>(new RegisterUserCommand_Validator());
+            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>
+                (_serviceProvider.GetRequiredService<IValidator<RegisterUserCommand>>());
 
             var userRegisterResult = await validationBehavior.Handle(user, CancellationToken.None, handler.Handle);
 
             //assert
             userRegisterResult.IsSuccess.Should().BeFalse();
-            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
+            _testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
         }
 
         [Fact]
@@ -188,13 +206,14 @@ namespace Application.Tests
 
             var registerUserCommandHandler = new RegisterUserCommandHandler(userManager);
 
-            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand,OperationResult<bool>>(new RegisterUserCommand_Validator());
+            var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand,OperationResult<bool>>
+                (_serviceProvider.GetRequiredService<IValidator<RegisterUserCommand>>());
 
             var userRegisterResult = await validationBehavior.Handle(registerUserCommand,CancellationToken.None,registerUserCommandHandler.Handle);
 
             userRegisterResult.IsSuccess.Should().BeFalse();
 
-            testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
+            _testOutputHelper.WriteLineOperationResultErrors(userRegisterResult);
         }
 
         [Fact]
@@ -264,7 +283,7 @@ namespace Application.Tests
 
             loginResult.Result.Should().BeNull();
             loginResult.IsSuccess.Should().BeFalse();
-            testOutputHelper.WriteLineOperationResultErrors(loginResult);
+            _testOutputHelper.WriteLineOperationResultErrors(loginResult);
         }
 
         [Fact]
@@ -334,7 +353,7 @@ namespace Application.Tests
 
             loginResult.Result.Should().BeNull();
             loginResult.IsNotFound.Should().BeTrue();
-            testOutputHelper.WriteLineOperationResultErrors(loginResult);
+            _testOutputHelper.WriteLineOperationResultErrors(loginResult);
         }
     }
 }
