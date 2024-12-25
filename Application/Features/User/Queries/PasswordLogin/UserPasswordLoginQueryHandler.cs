@@ -10,11 +10,11 @@ public class UserPasswordLoginQueryHandler(IUserManager userManager,IJwtService 
 {
     public async ValueTask<OperationResult<JwtAccessTokenModel>> Handle(UserPasswordLoginQuery request, CancellationToken cancellationToken)
     {
-        var validator = new UserPasswordLoginQueryValidator();
-        var validationResult =await validator.ValidateAsync(request);
+        //var validator = new UserPasswordLoginQueryValidator();
+        //var validationResult =await validator.ValidateAsync(request);
 
-        if (!validationResult.IsValid)
-            return OperationResult<JwtAccessTokenModel>.FailureResult(validationResult.Errors.ConvertToKeyValuepair());
+        //if (!validationResult.IsValid)
+        //    return OperationResult<JwtAccessTokenModel>.FailureResult(validationResult.Errors.ConvertToKeyValuepair());
 
         var user = request.UserNameOrEmail.IsEmail()
             ? await userManager.GetUserByEmailAsync(request.UserNameOrEmail, cancellationToken)

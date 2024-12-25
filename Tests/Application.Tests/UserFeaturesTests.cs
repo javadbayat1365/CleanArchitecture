@@ -68,7 +68,7 @@ namespace Application.Tests
             //arrange
             var faker = new Faker();
             var password = faker.Random.String(10);
-            var user = new RegisterUserCommand(
+            var registerUserHandler = new RegisterUserCommand(
                 faker.Person.FirstName,
                 faker.Person.LastName, 
                 string.Empty,
@@ -78,15 +78,15 @@ namespace Application.Tests
                 password
                 );
 
-            var usermanager = Substitute.For<IUserManager>();
-            var handler = new RegisterUserCommandHandler(usermanager);
-            usermanager.CreateByPasswordAsync(Arg.Any<UserEntity>(),user.Password,CancellationToken.None)
+            var userManager = Substitute.For<IUserManager>();
+            var handler = new RegisterUserCommandHandler(userManager);
+            userManager.CreateByPasswordAsync(Arg.Any<UserEntity>(),registerUserHandler.Password,CancellationToken.None)
                               .Returns(Task.FromResult(IdentityResult.Success));
             //act
             var validationBehavior = new ValidateRequestBehavior<RegisterUserCommand, OperationResult<bool>>
                 (_serviceProvider.GetRequiredService<IValidator<RegisterUserCommand>>());
 
-            var userRegisterResult = await validationBehavior.Handle(user, CancellationToken.None, handler.Handle);
+            var userRegisterResult = await validationBehavior.Handle(registerUserHandler, CancellationToken.None, handler.Handle);
             //var userRegisterResult =await handler.Handle(user, CancellationToken.None);
 
             //assert
@@ -353,6 +353,44 @@ namespace Application.Tests
 
             loginResult.Result.Should().BeNull();
             loginResult.IsNotFound.Should().BeTrue();
+            _testOutputHelper.WriteLineOperationResultErrors(loginResult);
+        }
+
+        [Fact]
+        public async Task Login_User_Inputs_Should_Be_Valid()
+        {
+            //Arrange
+            var faker = new Faker();
+            var loginQuery = new UserPasswordLoginQuery(faker.Person.Email, string.Empty);
+            var userManager = Substitute.For<IUserManager>();
+            var jwtService = Substitute.For<IJwtService>();
+            var userEntity = new UserEntity(
+                faker.Person.FirstName,
+                faker.Person.LastName,
+                faker.Person.UserName,
+                faker.Person.Email){ PhoneNumber = "0936" };
+
+            userManager.GetUserByEmailAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
+                             .Returns(Task.FromResult<UserEntity?>(userEntity));
+
+            userManager.CreateByPasswordAsync(userEntity, loginQuery.Password, CancellationToken.None)
+                             .Returns(Task.FromResult(IdentityResult.Success));
+
+            jwtService.GenerateTokenAsync(userEntity, CancellationToken.None)
+                            .Returns(Task.FromResult(new JwtAccessTokenModel("AccessToken", 3000)));
+
+            //Act
+            var userLoginQueryHandler = new UserPasswordLoginQueryHandler(userManager, jwtService);
+
+            var validationBehavior = new ValidateRequestBehavior<UserPasswordLoginQuery, OperationResult<JwtAccessTokenModel>>
+                (new UserPasswordLoginQueryValidator());
+
+            var loginResult = await validationBehavior.Handle(loginQuery, CancellationToken.None,userLoginQueryHandler.Handle);
+
+            loginResult.Result.Should().BeNull();
+
+            loginResult.IsSuccess.Should().BeFalse();
+
             _testOutputHelper.WriteLineOperationResultErrors(loginResult);
         }
     }
