@@ -29,7 +29,7 @@ public static class ApplicationServiceCollectionExtionsions
             if (validationModelBase is null)
                 continue;
 
-            var validator = requstMethodInfo?.Invoke(requestModel, new[] { validationModelBase});
+            var validator = requstMethodInfo?.Invoke(requestModel, [validationModelBase] );
             if (validator is null)
                 continue;
             var validatorInterfaces = validator.GetType()
