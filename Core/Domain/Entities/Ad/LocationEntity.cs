@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities.Ad;
+﻿using Domain.Common;
 
-public sealed class LocationEntity
+namespace Domain.Entities.Ad;
+
+public sealed class LocationEntity : BaseEntity<Guid>
 {
     public string Name { get;private set; }
 
