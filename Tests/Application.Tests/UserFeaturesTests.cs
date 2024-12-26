@@ -7,7 +7,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 using Application.Features.User.Queries.PasswordLogin;
 using Application.Contracts.User.Models;
 using Application.Common;
