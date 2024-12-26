@@ -383,7 +383,7 @@ namespace Application.Tests
             var userLoginQueryHandler = new UserPasswordLoginQueryHandler(userManager, jwtService);
 
             var validationBehavior = new ValidateRequestBehavior<UserPasswordLoginQuery, OperationResult<JwtAccessTokenModel>>
-                (new UserPasswordLoginQueryValidator());
+                (_serviceProvider.GetRequiredService<IValidator<UserPasswordLoginQuery>>());
 
             var loginResult = await validationBehavior.Handle(loginQuery, CancellationToken.None,userLoginQueryHandler.Handle);
 

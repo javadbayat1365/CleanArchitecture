@@ -12,8 +12,7 @@ public record RegisterUserCommand(
     string Email,
     string PhoneNumber,
     string Password,
-    string RepeatPasword
-    ) : IRequest<OperationResult<bool>>, IValidatableModel<RegisterUserCommand>
+    string RepeatPasword) : IRequest<OperationResult<bool>>, IValidatableModel<RegisterUserCommand>
 {
     public IValidator<RegisterUserCommand> Validate(ValidationModelBase<RegisterUserCommand> validator)
     {
