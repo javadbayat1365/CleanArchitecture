@@ -2,7 +2,7 @@
 using Application.Repositories.Common;
 using Mediator;
 
-namespace Application.Features.Location.Queries;
+namespace Application.Features.Location.Queries.GetLocationById;
 
 public class GetLocationByIdQueryHandler(IUnitOfWork unitOfWork) 
       : IRequestHandler<GetLocationByIdQuery, OperationResult<GetLocationByIdQueryResult>>
