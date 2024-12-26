@@ -12,7 +12,7 @@ public record GetLocationsByNameQuery(string LocationName)
     {
         validator.RuleFor(c => c.LocationName)
             .NotEmpty()
-            .MinimumLength(2);
+            .MinimumLength(3);
 
         return validator;
     }

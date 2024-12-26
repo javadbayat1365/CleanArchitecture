@@ -9,9 +9,10 @@ public sealed class CategoryEntity:BaseEntity<Guid>
     private List<AdEntitiy> _ads = new();
     public IReadOnlyList<AdEntitiy> Ads => _ads.AsReadOnly();
 
-    public CategoryEntity(){}
+    private CategoryEntity(){}
     public CategoryEntity(string name)
     {
+        Id = Guid.NewGuid();
        Name = name;
     }
 
