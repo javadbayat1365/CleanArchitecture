@@ -2,9 +2,8 @@
 using Application.Extensions;
 using Application.Features.Location.Commands;
 using Application.Features.Location.Queries.GetLocationsByName;
-using Application.Features.User.Commands.Register;
 using Application.Repositories.Common;
-using Application.Repositories.LocationRepository;
+using Application.Repositories.Location;
 using Application.Tests.Extensions;
 using Bogus;
 using Domain.Entities.Ad;
