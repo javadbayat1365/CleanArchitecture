@@ -1,6 +1,6 @@
 ﻿using Domain.Entities.Ad;
 
-namespace Application.Repositories.LocationRepository;
+namespace Application.Repositories.Location;
 
 public interface ILocationRepository
 {
