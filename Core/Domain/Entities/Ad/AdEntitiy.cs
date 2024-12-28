@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using Domain.Common;
 using Domain.Common.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace Domain.Entities.Ad;
@@ -45,7 +46,7 @@ public sealed class AdEntitiy : BaseEntity<Guid>
         //This
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(description);
-        //Or
+        //Or This
         Guard.Against.NullOrEmpty(userId, message: "Invalid User Id");
         Guard.Against.NullOrEmpty(category, message: "Invalid Category Id");
         Guard.Against.NullOrEmpty(locationId, message: "Invalid Location Id");
@@ -110,6 +111,11 @@ public sealed class AdEntitiy : BaseEntity<Guid>
         _logs.Add(new LogValueObject(DateTime.Now,"the Ad is edited!"));
         else
         _logs.Add(new LogValueObject(DateTime.Now,domainResult.Message));
+    }
+
+    public void AddImage([NotNull] ImageValueObject image)
+    {
+        _images.Add(image);
     }
 
 }
