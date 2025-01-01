@@ -34,11 +34,10 @@ public class AdFeaturesTests
     {
         //Arrange
         var createAdCommand = new CreateAdCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(),"test Title","Test Description",
-            new[] { new CreateAdCommand.CreateAdImagesModel("Test", "image/png") }
-            );
+            new[] { new CreateAdCommand.CreateAdImagesModel("Test", "image/png") });
 
         var unitOfWorkMock = Substitute.For<IUnitOfWork>();
-        var adRepositoryMock = Substitute.For<IAdRepository>();
+        //var adRepositoryMock = Substitute.For<IAdRepository>();
         var userManagerMock = Substitute.For<IUserManager>();
         var fileServiceMock = Substitute.For<IFileService>();
         var locationRepositoryMock = Substitute.For<ILocationRepository>();
@@ -48,18 +47,18 @@ public class AdFeaturesTests
         locationRepositoryMock.GetLocationByIdAsync(Arg.Any<Guid>()).Returns(Task.FromResult<LocationEntity?>(new LocationEntity("location")));
         categoryRepositoryMock.GetCategoryByIdAsync(Arg.Any<Guid>()).Returns(Task.FromResult<CategoryEntity?>(new CategoryEntity("category")));
 
-        adRepositoryMock.CreateAdAsync(Arg.Any<AdEntitiy>())
-            .Returns(Task.CompletedTask);
+        //adRepositoryMock.CreateAdAsync(Arg.Any<AdEntitiy>())
+        //    .Returns(Task.CompletedTask);
 
         userManagerMock.GetUserByIdAsync(Arg.Any<Guid>())
-            .Returns(Task.FromResult(new Domain.Entities.User.UserEntity("test","test","test","test@test.com")));
+            .Returns(Task.FromResult(new Domain.Entities.User.UserEntity("test", "test", "test", "test@test.com")));
 
         fileServiceMock.SaveFilesAsync(Arg.Any<List<SaveFileModel>>()).Returns(Task.FromResult(new List<SaveFileModelResult>() { 
          new("Test.png","image/png")
         }));
 
 
-        unitOfWorkMock.AdRepository.Returns(adRepositoryMock);
+        //unitOfWorkMock.AdRepository.Returns(adRepositoryMock);
         unitOfWorkMock.LocationRepository.Returns(locationRepositoryMock);
         unitOfWorkMock.CategoryRepository.Returns(categoryRepositoryMock);
 
