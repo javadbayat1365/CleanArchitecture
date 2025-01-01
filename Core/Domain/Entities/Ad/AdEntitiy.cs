@@ -71,7 +71,7 @@ public sealed class AdEntitiy : BaseEntity<Guid>
     {
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(description);
-
+        //OR
         Guard.Against.NullOrEmpty(userId, message: "Invalid User Id");
         Guard.Against.NullOrEmpty(Id, message: "Invalid Id");
         Guard.Against.NullOrEmpty(category, message: "Invalid Category Id");
