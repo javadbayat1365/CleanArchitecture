@@ -6,7 +6,7 @@ using Application.Repositories.Common;
 using Domain.Entities.Ad;
 using Mediator;
 
-namespace Application.Features.Ad.Commands;
+namespace Application.Features.Ad.Commands.CreateAd;
 
 public class CreateAdCommandHandler(IUnitOfWork unitOfWork, IUserManager userManager, IFileService fileService) : IRequestHandler<CreateAdCommand, OperationResult<bool>>
 {

@@ -3,6 +3,7 @@ using Application.Contracts.FileService.Models;
 using Application.Contracts.User;
 using Application.Extensions;
 using Application.Features.Ad.Commands;
+using Application.Features.Ad.Commands.CreateAd;
 using Application.Repositories.Ad;
 using Application.Repositories.Category;
 using Application.Repositories.Common;

@@ -2,7 +2,6 @@
 using Domain.Common;
 using Domain.Common.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 
 namespace Domain.Entities.Ad;
 
@@ -94,19 +93,22 @@ public sealed class AdEntitiy : BaseEntity<Guid>
         return ad;
     }
 
-    public void Edit(string title,string description,Guid categotyId,Guid? locationId)
+    public void Edit(string title,string description,Guid? categotyId,Guid? locationId)
     {
-        ArgumentNullException.ThrowIfNull(title);
-        ArgumentNullException.ThrowIfNull(description);
+        if (!string.IsNullOrWhiteSpace(title))
+            Title = title;
 
-        Guard.Against.NullOrEmpty(locationId, message: "Invalid Location Id");
+        if (!string.IsNullOrWhiteSpace(description))
+            Description = description;
 
-        CategoryId = categotyId;
-        Title = title;
-        Description = description; 
-        LocationId = locationId.Value;
+        if (categotyId.HasValue && categotyId.Value != Guid.Empty)
+            CategoryId = categotyId.Value;
+
+        if (locationId.HasValue && locationId.Value != Guid.Empty)
+            LocationId = locationId.Value;
 
         var domainResult = ChangeState(AdState.Pending);
+
         if(domainResult.IsSuccess)
         _logs.Add(new LogValueObject(DateTime.Now,"the Ad is edited!"));
         else
@@ -116,6 +118,10 @@ public sealed class AdEntitiy : BaseEntity<Guid>
     public void AddImage([NotNull] ImageValueObject image)
     {
         _images.Add(image);
+    }
+    public void RemoveImages(string[] imageNames)
+    {
+        _images.RemoveAll(c => imageNames.Contains(c.FileName));
     }
 
 }
