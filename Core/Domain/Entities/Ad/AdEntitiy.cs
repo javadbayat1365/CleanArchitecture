@@ -93,7 +93,7 @@ public sealed class AdEntitiy : BaseEntity<Guid>
         return ad;
     }
 
-    public void Edit(string title,string description,Guid? categotyId,Guid? locationId)
+    public void Edit(string? title,string? description,Guid? categotyId,Guid? locationId)
     {
         if (!string.IsNullOrWhiteSpace(title))
             Title = title;
