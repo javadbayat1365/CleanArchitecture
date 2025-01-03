@@ -3,7 +3,7 @@ using Application.Common.Validation;
 using FluentValidation;
 using Mediator;
 
-namespace Application.Features.Ad.Commands;
+namespace Application.Features.Ad.Commands.CreateAd;
 
 public record CreateAdCommand(
     Guid UserId,
@@ -11,7 +11,7 @@ public record CreateAdCommand(
     Guid LocationId,
     string Title,
     string Description,
-    CreateAdCommand.CreateAdImagesModel[] AdImages):IRequest<OperationResult<bool>>,IValidatableModel<CreateAdCommand>
+    CreateAdCommand.CreateAdImagesModel[] AdImages) : IRequest<OperationResult<bool>>, IValidatableModel<CreateAdCommand>
 {
     public IValidator<CreateAdCommand> Validate(ValidationModelBase<CreateAdCommand> validator)
     {
@@ -24,7 +24,7 @@ public record CreateAdCommand(
         return validator;
     }
 
-    public record CreateAdImagesModel(string Base64File,string FileContent);
+    public record CreateAdImagesModel(string Base64File, string FileContent);
 
 }
 

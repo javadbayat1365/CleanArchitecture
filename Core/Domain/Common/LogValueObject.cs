@@ -1,3 +1,5 @@
-﻿namespace Domain.Common;
+﻿using Domain.Common.ValueObjects;
 
-public record LogValueObject(DateTime Register,string Message,string? AdditionalMessage = null);
+namespace Domain.Common;
+
+public record LogValueObject(DateTime RegisterDate,string Message,string? AdditionalMessage = null);
