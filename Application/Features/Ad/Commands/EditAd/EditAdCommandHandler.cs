@@ -34,11 +34,13 @@ public class EditAdCommandHandler(IUnitOfWork unitOfWork,IFileService fileServic
             return OperationResult<bool>.NotFoundResult(nameof(EditAdCommand.AdId), "Ad Not Found!");
         }
         editAd.Edit(request.Title,request.Description,request.categotyId.Value,request.locationId.Value);
+
         if(request.RemovedImageNames.Any())
         {
             await fileService.RemoveFileAsync(request.RemovedImageNames,cancellationToken);
             editAd.RemoveImages(request.RemovedImageNames);
         }
+
         if (request.NewImages.Any())
         {
             foreach (var item in request.NewImages)
