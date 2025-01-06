@@ -139,6 +139,7 @@ public class AdFeaturesTests
         adEntityMock.Images.Should().NotContain(c => c.FileName.Equals("TestFile1.png"));
         adEntityMock.Images.Should().HaveCount(3);
         adEntityMock.Images.Should().Contain(c => c.FileName.Contains("Test4.png"));
+        adEntityMock.CurrentState.Should().Be(AdEntitiy.AdState.Pending);
         _testOutputHelper.WriteLineOperationResultErrors(editAdResult);
     }
 }
