@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using Domain.Common;
 using Domain.Common.ValueObjects;
+using Domain.Entities.User;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Domain.Entities.Ad;
@@ -17,7 +18,13 @@ public sealed class AdEntitiy : BaseEntity<Guid>
     public IReadOnlyList<LogValueObject> Logs => _logs.AsReadOnly();
     public Guid CategoryId { get;private set; }
     public Guid LocationId { get;private set; }
-    public AdState CurrentState { get;private set; } 
+    public AdState CurrentState { get;private set; }
+
+    #region MyRegion
+    public CategoryEntity Category  { get; set; }
+    public LocationEntity Location{ get; set; }
+    public UserEntity User{ get; set; }
+    #endregion
 
     public enum AdState
     {
