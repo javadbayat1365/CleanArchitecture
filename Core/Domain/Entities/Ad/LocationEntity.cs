@@ -8,7 +8,7 @@ public sealed class LocationEntity : BaseEntity<Guid>
 
     private List<AdEntitiy> _ads = new();
 
-    public IReadOnlyList<AdEntitiy> ads => _ads.AsReadOnly();
+    public IReadOnlyList<AdEntitiy> Ads => _ads.AsReadOnly();
 
     private LocationEntity()
     {
