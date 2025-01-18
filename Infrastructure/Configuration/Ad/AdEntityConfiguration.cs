@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Infrastructure.Configuration.Ad;
+namespace Persistence.Configuration.Ad;
 
 internal class AdEntityConfiguration : IEntityTypeConfiguration<AdEntitiy>
 {

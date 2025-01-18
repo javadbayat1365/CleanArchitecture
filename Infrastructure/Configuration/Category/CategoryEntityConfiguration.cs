@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configuration.Category;
+namespace Persistence.Configuration.Category;
 
 internal class CategoryEntityConfiguration : IEntityTypeConfiguration<CategoryEntity>
 {
