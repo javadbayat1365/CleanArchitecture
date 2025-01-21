@@ -5,7 +5,7 @@ using Mediator;
 
 namespace Application.Features.Location.Commands;
 
-public class CreateLocationCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateLocationCommand, OperationResult<bool>>
+public sealed class CreateLocationCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateLocationCommand, OperationResult<bool>>
 {
     public async ValueTask<OperationResult<bool>> Handle(CreateLocationCommand request, CancellationToken cancellationToken)
     {

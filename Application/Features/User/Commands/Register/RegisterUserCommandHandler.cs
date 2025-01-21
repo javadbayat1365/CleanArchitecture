@@ -5,7 +5,7 @@ using Mediator;
 
 namespace Application.Features.User.Commands.Register;
 
-public class RegisterUserCommandHandler(IUserManager userManager) : IRequestHandler<RegisterUserCommand, OperationResult<bool>>
+public sealed class RegisterUserCommandHandler(IUserManager userManager) : IRequestHandler<RegisterUserCommand, OperationResult<bool>>
 {
 
     public async ValueTask<OperationResult<bool>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)

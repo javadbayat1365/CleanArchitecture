@@ -5,7 +5,7 @@ using Mediator;
 
 namespace Application.Features.Category.Commands.CreateCategory;
 
-public class CreateCategoryCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateCategoryCommand, OperationResult<bool>>
+public sealed class CreateCategoryCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateCategoryCommand, OperationResult<bool>>
 {
     public async ValueTask<OperationResult<bool>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
