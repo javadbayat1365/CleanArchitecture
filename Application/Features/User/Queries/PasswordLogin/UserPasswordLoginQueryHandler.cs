@@ -6,7 +6,8 @@ using Mediator;
 
 namespace Application.Features.User.Queries.PasswordLogin;
 
-public class UserPasswordLoginQueryHandler(IUserManager userManager,IJwtService jwtService) : IRequestHandler<UserPasswordLoginQuery, OperationResult<JwtAccessTokenModel>>
+public sealed class UserPasswordLoginQueryHandler(IUserManager userManager,IJwtService jwtService) 
+    : IRequestHandler<UserPasswordLoginQuery, OperationResult<JwtAccessTokenModel>>
 {
     public async ValueTask<OperationResult<JwtAccessTokenModel>> Handle(UserPasswordLoginQuery request, CancellationToken cancellationToken)
     {

@@ -4,7 +4,7 @@ using Mediator;
 
 namespace Application.Features.Category.Queries.GetCategoriesByName;
 
-public class GetCategoriesByNameQueryHandler (IUnitOfWork unitOfWork)
+public sealed class GetCategoriesByNameQueryHandler (IUnitOfWork unitOfWork)
     : IRequestHandler<GetCategoriesByNameQuery, OperationResult<List<GetCategoriesByNameQueryResult>>>
 {
     public async ValueTask<OperationResult<List<GetCategoriesByNameQueryResult>>> Handle(GetCategoriesByNameQuery request, CancellationToken cancellationToken)

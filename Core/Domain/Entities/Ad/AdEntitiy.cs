@@ -20,7 +20,7 @@ public sealed class AdEntitiy : BaseEntity<Guid>
     public Guid LocationId { get;private set; }
     public AdState CurrentState { get;private set; }
 
-    #region MyRegion
+    #region Navigation Properties
     public CategoryEntity Category  { get; set; }
     public LocationEntity Location{ get; set; }
     public UserEntity User{ get; set; }
