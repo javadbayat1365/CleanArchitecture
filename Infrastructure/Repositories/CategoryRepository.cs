@@ -17,8 +17,8 @@ internal class CategoryRepository(CleanDbContext db) : BaseRepository<CategoryEn
         return TableNoTracking.Where(s => s.Name.Contains(categoryName)).ToListAsync(cancellationToken);
     }
 
-    public Task<CategoryEntity?> GetCategoryByIdAsync(Guid categoryId, CancellationToken cancellationToken = default)
+    public async Task<CategoryEntity?> GetCategoryByIdAsync(Guid categoryId, CancellationToken cancellationToken = default)
     {
-        return base.TableNoTracking.SingleOrDefaultAsync(s => s.Id.Equals(categoryId),cancellationToken);
+        return await TableNoTracking.SingleOrDefaultAsync(s => s.Id.Equals(categoryId),cancellationToken);
     }
 }

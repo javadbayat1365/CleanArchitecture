@@ -28,7 +28,7 @@ public sealed class EditAdCommandHandler(IUnitOfWork unitOfWork,IFileService fil
             }
         }
 
-        AdEntitiy editAd =await unitOfWork.AdRepository.GetAdByIdAsync(request.AdId,cancellationToken);
+        AdEntitiy editAd =await unitOfWork.AdRepository.GetAdByIdForUpdateAsync(request.AdId,cancellationToken);
         if(editAd is null)
         {
             return OperationResult<bool>.NotFoundResult(nameof(EditAdCommand.AdId), "Ad Not Found!");
