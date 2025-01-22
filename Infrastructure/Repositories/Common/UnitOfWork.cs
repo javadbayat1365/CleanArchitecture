@@ -5,7 +5,7 @@ using Application.Repositories.Location;
 
 namespace Persistence.Repositories.Common;
 
-internal class UnitOfWork : IUnitOfWork
+public class UnitOfWork : IUnitOfWork
 {
     private readonly CleanDbContext _db;
     public UnitOfWork(CleanDbContext db)

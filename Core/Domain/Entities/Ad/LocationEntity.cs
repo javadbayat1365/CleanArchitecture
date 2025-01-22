@@ -1,4 +1,5 @@
-﻿using Domain.Common;
+﻿using Ardalis.GuardClauses;
+using Domain.Common;
 
 namespace Domain.Entities.Ad;
 
@@ -18,5 +19,12 @@ public sealed class LocationEntity : BaseEntity<Guid>
     {
         Id = Guid.NewGuid();
         Name = name;
+    }
+
+    public void EditName(string newLocaitonName)
+    {
+        Guard.Against.NullOrEmpty(newLocaitonName);
+
+        Name = newLocaitonName;
     }
 }
