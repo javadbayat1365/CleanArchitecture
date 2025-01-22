@@ -9,7 +9,7 @@ public sealed class GetLocationsByNameQueryHandler(IUnitOfWork unitOfWork)
 {
     public async ValueTask<OperationResult<IEnumerable<GetLocationsByNameQueryResult>>> Handle(GetLocationsByNameQuery request, CancellationToken cancellationToken)
     {
-        var locations =await  unitOfWork.LocationRepository.GetLocaitonsByNameAsync(request.LocationName,cancellationToken);
+        var locations =await  unitOfWork.LocationRepository.GetLocationsByNameAsync(request.LocationName,cancellationToken);
 
         if (!locations.Any())
             return OperationResult<IEnumerable<GetLocationsByNameQueryResult>>

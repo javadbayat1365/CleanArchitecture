@@ -98,7 +98,7 @@ public class LocationFeaturesTests
             new LocationEntity(faker.Address.City()),
             new LocationEntity(faker.Address.City()),
             ];
-        locationRepositoryMock.GetLocaitonsByNameAsync(location.LocationName)
+        locationRepositoryMock.GetLocationsByNameAsync(location.LocationName)
             .Returns(Task.FromResult(locations));
 
         unitOfWorkMock.LocationRepository.Returns(locationRepositoryMock);
@@ -132,7 +132,7 @@ public class LocationFeaturesTests
             new LocationEntity(faker.Address.City()),
             new LocationEntity(faker.Address.City()),
             ];
-        locationRepositoryMock.GetLocaitonsByNameAsync(location.LocationName)
+        locationRepositoryMock.GetLocationsByNameAsync(location.LocationName)
             .Returns(Task.FromResult(locations));
 
         unitOfWorkMock.LocationRepository.Returns(locationRepositoryMock);
@@ -166,7 +166,7 @@ public class LocationFeaturesTests
             new LocationEntity(faker.Address.City()),
             new LocationEntity(faker.Address.City()),
             ];
-        locationRepositoryMock.GetLocaitonsByNameAsync(location.LocationName)
+        locationRepositoryMock.GetLocationsByNameAsync(location.LocationName)
             .Returns(Task.FromResult(locations));
 
         unitOfWorkMock.LocationRepository.Returns(locationRepositoryMock);

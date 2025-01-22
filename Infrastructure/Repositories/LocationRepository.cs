@@ -14,13 +14,16 @@ internal sealed class LocationRepository(CleanDbContext db)
        await AddAsync(locationEntity,cancellationToken);
     }
 
-    public async Task<List<LocationEntity>> GetLocaitonsByNameAsync(string locationName, CancellationToken cancellationToken = default)
+    public async Task<List<LocationEntity>> GetLocationsByNameAsync(string locationName, CancellationToken cancellationToken = default)
     {
         return await TableNoTracking.Where(s => locationName.Contains(s.Name)).ToListAsync(cancellationToken);
     }
 
     public async Task<LocationEntity?> GetLocationByIdAsync(Guid locationId, CancellationToken cancellationToken = default)
         => await TableNoTracking.FirstOrDefaultAsync(w => w.Id.Equals(locationId), cancellationToken);
+
+    public async Task<LocationEntity?> GetLocationByIdForEditAsync(Guid locationId, CancellationToken cancellationToken = default)
+        => await Table.FirstOrDefaultAsync(w => w.Id.Equals(locationId), cancellationToken);
 
     public async Task<bool> IsLocationExistAsync(string locationName, CancellationToken cancellationToken = default)
     {
