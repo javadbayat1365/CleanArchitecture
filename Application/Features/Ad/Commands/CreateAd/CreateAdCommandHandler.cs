@@ -8,7 +8,7 @@ using Mediator;
 
 namespace Application.Features.Ad.Commands.CreateAd;
 
-public class CreateAdCommandHandler(IUnitOfWork unitOfWork, IUserManager userManager, IFileService fileService) : IRequestHandler<CreateAdCommand, OperationResult<bool>>
+public sealed class CreateAdCommandHandler(IUnitOfWork unitOfWork, IUserManager userManager, IFileService fileService) : IRequestHandler<CreateAdCommand, OperationResult<bool>>
 {
     public async ValueTask<OperationResult<bool>> Handle(CreateAdCommand request, CancellationToken cancellationToken)
     {

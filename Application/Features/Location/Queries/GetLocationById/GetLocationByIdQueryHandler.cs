@@ -4,7 +4,7 @@ using Mediator;
 
 namespace Application.Features.Location.Queries.GetLocationById;
 
-public class GetLocationByIdQueryHandler(IUnitOfWork unitOfWork) 
+public sealed class GetLocationByIdQueryHandler(IUnitOfWork unitOfWork) 
       : IRequestHandler<GetLocationByIdQuery, OperationResult<GetLocationByIdQueryResult>>
 {
     public async ValueTask<OperationResult<GetLocationByIdQueryResult>> Handle(GetLocationByIdQuery request, CancellationToken cancellationToken)
