@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using Domain.Common;
 using Domain.Common.ValueObjects;
+using Domain.Entities.User;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Domain.Entities.Ad;
@@ -17,8 +18,13 @@ public sealed class AdEntitiy : BaseEntity<Guid>
     public IReadOnlyList<LogValueObject> Logs => _logs.AsReadOnly();
     public Guid CategoryId { get;private set; }
     public Guid LocationId { get;private set; }
-    public AdState CurrentState { get;private set; } 
+    public AdState CurrentState { get;private set; }
 
+    #region Navigation Properties
+        public UserEntity UserEntity { get;private set; }
+        public LocationEntity LocationEntity { get;private set; }
+        public CategoryEntity CategoryEntity { get;private set; }
+    #endregion
     public enum AdState
     {
         Pending,
@@ -41,18 +47,18 @@ public sealed class AdEntitiy : BaseEntity<Guid>
     }
 
     private AdEntitiy() { }
-    public static AdEntitiy Create(string title,string description,Guid? userId,Guid category,Guid? locationId) {
+    public static AdEntitiy Create(string title,string description,Guid? userId,Guid categoryId,Guid? locationId) {
         //This
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(description);
         //Or This
         Guard.Against.NullOrEmpty(userId, message: "Invalid User Id");
-        Guard.Against.NullOrEmpty(category, message: "Invalid Category Id");
+        Guard.Against.NullOrEmpty(categoryId, message: "Invalid Category Id");
         Guard.Against.NullOrEmpty(locationId, message: "Invalid Location Id");
 
         var ad = new AdEntitiy()
         {
-            CategoryId = category,
+            CategoryId = categoryId,
             Title = title,
             Description = description,
             Id = Guid.NewGuid(),
@@ -66,20 +72,49 @@ public sealed class AdEntitiy : BaseEntity<Guid>
         return ad;
     }
 
-    public static AdEntitiy Create(Guid? Id,string title, string description, Guid? userId, Guid category, Guid? locationId)
+    public static AdEntitiy Create(string title, string description, UserEntity user, CategoryEntity category, LocationEntity location)
+    {
+        //This
+        ArgumentNullException.ThrowIfNull(title);
+        ArgumentNullException.ThrowIfNull(description);
+        //Or This
+        Guard.Against.Null(user, message: "Invalid User");
+        Guard.Against.Null(category, message: "Invalid Category");
+        Guard.Against.Null(location, message: "Invalid Location");
+
+        var ad = new AdEntitiy()
+        {
+            Title = title,
+            Description = description,
+            Id = Guid.NewGuid(),
+            LocationEntity = location,
+            LocationId = location.Id,
+            UserEntity = user,
+            UserId = user.Id,
+            CategoryEntity = category,
+            CategoryId = category.Id,
+            CurrentState = AdState.Pending
+        };
+
+        ad._logs.Add(new LogValueObject(DateTime.Now, "Ad Created!"));
+
+        return ad;
+    }
+
+    public static AdEntitiy Create(Guid? Id,string title, string description, Guid? userId, Guid categoryId, Guid? locationId)
     {
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(description);
         //OR
         Guard.Against.NullOrEmpty(userId, message: "Invalid User Id");
         Guard.Against.NullOrEmpty(Id, message: "Invalid Id");
-        Guard.Against.NullOrEmpty(category, message: "Invalid Category Id");
+        Guard.Against.NullOrEmpty(categoryId, message: "Invalid Category Id");
         Guard.Against.NullOrEmpty(locationId, message: "Invalid Location Id");
 
         
         var ad = new AdEntitiy()
         {
-            CategoryId = category,
+            CategoryId = categoryId,
             Title = title,
             Description = description,
             Id = Id.Value,
