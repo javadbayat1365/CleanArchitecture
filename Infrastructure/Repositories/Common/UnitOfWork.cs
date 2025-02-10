@@ -11,7 +11,7 @@ public class UnitOfWork : IUnitOfWork
     public UnitOfWork(CleanDbContext db)
     {
         _db = db;
-        LocationRepository = new LocationRepository(db);
+        LocationRepository = new LocationRepository(db);//به کلاس پاس داده نمی شود چون فقط از اینجا باید نمونه سازی انجام شود
         CategoryRepository = new CategoryRepository(db);
         AdRepository = new AdRepository(db);
     }

@@ -1,7 +1,6 @@
 ﻿using Domain.Entities.Ad;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Persistence.Configuration.Ad;

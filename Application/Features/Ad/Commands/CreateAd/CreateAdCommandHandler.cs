@@ -8,7 +8,10 @@ using Mediator;
 
 namespace Application.Features.Ad.Commands.CreateAd;
 
-public sealed class CreateAdCommandHandler(IUnitOfWork unitOfWork, IUserManager userManager, IFileService fileService) : IRequestHandler<CreateAdCommand, OperationResult<bool>>
+public sealed class CreateAdCommandHandler(
+    IUnitOfWork unitOfWork, 
+    IUserManager userManager, 
+    IFileService fileService) : IRequestHandler<CreateAdCommand, OperationResult<bool>>
 {
     public async ValueTask<OperationResult<bool>> Handle(CreateAdCommand request, CancellationToken cancellationToken)
     {
@@ -43,6 +46,8 @@ public sealed class CreateAdCommandHandler(IUnitOfWork unitOfWork, IUserManager 
 
             savedImages.ForEach(a => createAd.AddImage(new Domain.Common.ValueObjects.ImageValueObject(a.FileName, a.FileType)));
         }
+
+        await unitOfWork.AdRepository.CreateAdAsync(createAd);
 
         await unitOfWork.CommitAsync(cancellationToken);
 
