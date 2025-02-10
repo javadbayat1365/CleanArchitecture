@@ -21,9 +21,9 @@ public sealed class AdEntitiy : BaseEntity<Guid>
     public AdState CurrentState { get;private set; }
 
     #region Navigation Properties
-    public CategoryEntity Category  { get; set; }
-    public LocationEntity Location{ get; set; }
-    public UserEntity User{ get; set; }
+        public UserEntity User { get;private set; }
+        public LocationEntity Location { get;private set; }
+        public CategoryEntity Category { get;private set; }
     #endregion
 
     public enum AdState
@@ -88,11 +88,11 @@ public sealed class AdEntitiy : BaseEntity<Guid>
             Title = title,
             Description = description,
             Id = Guid.NewGuid(),
-            LocationEntity = location,
+            Location = location,
             LocationId = location.Id,
-            UserEntity = user,
+            User = user,
             UserId = user.Id,
-            CategoryEntity = category,
+            Category = category,
             CategoryId = category.Id,
             CurrentState = AdState.Pending
         };

@@ -102,7 +102,7 @@ public class AdFeaturesTests
         locationRepositoryMock.GetLocationByIdAsync(Arg.Any<Guid>()).Returns(Task.FromResult<LocationEntity?>(new LocationEntity("location")));
         categoryRepositoryMock.GetCategoryByIdAsync(Arg.Any<Guid>()).Returns(Task.FromResult<CategoryEntity?>(new CategoryEntity("category")));
 
-        adRepositoryMock.GetAdByIdForUpdateAsync(mockId)!.Returns(Task.FromResult(adEntityMock));
+        adRepositoryMock.GetAdByIdForUpdateAsync(mockId,CancellationToken.None)!.Returns(Task.FromResult(adEntityMock));
 
         fileServiceMock.SaveFilesAsync(Arg.Any<List<SaveFileModel>>()).Returns(Task.FromResult(new List<SaveFileModelResult>() {
          new("Test4.png","image/png")

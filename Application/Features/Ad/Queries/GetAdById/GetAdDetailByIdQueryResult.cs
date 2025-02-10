@@ -26,10 +26,10 @@ public record GetAdDetailByIdQueryResult(
         profile.CreateMap<AdEntitiy, GetAdDetailByIdQueryResult>()
             .ForCtorParam(nameof(AdId), opt => opt.MapFrom(c => c.Id))
             .ForCtorParam(nameof(OwnerId), opt => opt.MapFrom(c => c.UserId))
-            .ForCtorParam(nameof(OwnerUserName), opt => opt.MapFrom(c => c.UserEntity.UserName))
-            .ForCtorParam(nameof(LocationName), opt => opt.MapFrom(c => c.LocationEntity.Name))
-            .ForCtorParam(nameof(CategoryName), opt => opt.MapFrom(c => c.CategoryEntity.Name))
-            .ForCtorParam(nameof(OwnerPhoneNumber), opt => opt.MapFrom(c => c.UserEntity.PhoneNumber))
+            .ForCtorParam(nameof(OwnerUserName), opt => opt.MapFrom(c => c.User.UserName))
+            .ForCtorParam(nameof(LocationName), opt => opt.MapFrom(c => c.Location.Name))
+            .ForCtorParam(nameof(CategoryName), opt => opt.MapFrom(c => c.Category.Name))
+            .ForCtorParam(nameof(OwnerPhoneNumber), opt => opt.MapFrom(c => c.User.PhoneNumber))
             .ForCtorParam(nameof(CurrentState), opt => opt.MapFrom(c => c.CurrentState))
             .ReverseMap();
     }
