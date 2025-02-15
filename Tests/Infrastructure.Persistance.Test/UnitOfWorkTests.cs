@@ -84,6 +84,6 @@ public class UnitOfWorkTests:IClassFixture<PersistenceTestSetup>
 
         locationById.ModifiedDate.Should().BeMoreThan(TimeSpan.MinValue);
 
-        _testOutputHelper.WriteLine("Current Added Location ModifiedDate Date: " + locationByIdNewName.ModifiedDate);
+        _testOutputHelper.WriteLine("Current Updated Location ModifiedDate Date: " + locationByIdNewName.ModifiedDate);
     }
 }
