@@ -29,4 +29,9 @@ internal sealed class LocationRepository(CleanDbContext db)
     {
         return await TableNoTracking.AnyAsync(s => s.Name.Contains(locationName));
     }
+
+    public async Task<List<LocationEntity>> GetLocaitonsByNameAsync(string locationName, CancellationToken cancellationToken = default)
+    {
+        return await TableNoTracking.Where(w => w.Name.Contains(locationName)).ToListAsync(cancellationToken);
+    }
 }

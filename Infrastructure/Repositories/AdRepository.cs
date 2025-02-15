@@ -12,6 +12,11 @@ internal class AdRepository(CleanDbContext db) : BaseRepository<AdEntitiy>(db), 
        await  AddAsync(adEntitiy, cancellationToken);
     }
 
+    public async Task<AdEntitiy?> GetAdByIdAsync(Guid adId, CancellationToken cancellationToken = default)
+    {
+        return await TableNoTracking.SingleOrDefaultAsync(s => s.Id == adId,cancellationToken);
+    }
+
     public async Task<AdEntitiy?> GetAdByIdForUpdateAsync(Guid adId, CancellationToken cancellationToken = default)
     {
         return await Table.SingleOrDefaultAsync(s => s.Id.Equals(adId),cancellationToken);

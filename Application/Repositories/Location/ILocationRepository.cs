@@ -9,4 +9,5 @@ public interface ILocationRepository
     Task<LocationEntity?> GetLocationByIdForEditAsync(Guid locationId,CancellationToken cancellationToken=default);
     Task<List<LocationEntity>> GetLocationsByNameAsync(string locationName,CancellationToken cancellationToken=default);
     Task<bool> IsLocationExistAsync(string locationName,CancellationToken cancellationToken = default);
+    Task<List<LocationEntity>> GetLocaitonsByNameAsync(string locationName, CancellationToken cancellationToken = default);
 }
