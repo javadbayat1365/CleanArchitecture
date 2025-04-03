@@ -25,6 +25,7 @@ public sealed class AdEntitiy : BaseEntity<Guid>
         public LocationEntity Location { get;private set; }
         public CategoryEntity Category { get;private set; }
     #endregion
+
     public enum AdState
     {
         Pending,
