@@ -1,9 +1,10 @@
 ﻿using Domain.Entities.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Persistence;
 
-namespace Persistence.Stores;
+namespace Identity.IdentitySetup.Stores;
 
-public class AppUserStore(CleanDbContext context,IdentityErrorDescriber? describer = null)
+internal class AppUserStore(CleanDbContext context, IdentityErrorDescriber? describer = null)
     : UserStore<UserEntity, RoleEntity, CleanDbContext, Guid, UserClaimEntity, UserRoleEntity, UserLoginEntity, UserTokenEntity, RoleClaimEntity>(context, describer);
 
