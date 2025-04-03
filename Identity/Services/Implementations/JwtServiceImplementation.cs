@@ -3,6 +3,7 @@ using Application.Contracts.User.Models;
 using Domain.Entities.User;
 using Identity.IdentitySetup.Factories;
 using Identity.Services.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,7 +12,7 @@ using System.Text;
 
 namespace Identity.Services.Implementations;
 
-internal class JwtServiceImplementation(AppUserClaimPrincipalFactory claimPrincipalFactory, IOptions<JwtConfiguration> jwtConfiguration) : IJwtService
+internal class JwtServiceImplementation(IUserClaimsPrincipalFactory<UserEntity> claimPrincipalFactory, IOptions<JwtConfiguration> jwtConfiguration) : IJwtService
 {
     public async Task<JwtAccessTokenModel> GenerateTokenAsync(UserEntity user, CancellationToken cancellationToken)
     {
@@ -33,6 +34,6 @@ internal class JwtServiceImplementation(AppUserClaimPrincipalFactory claimPrinci
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(descriptor);
-        return new JwtAccessTokenModel(tokenHandler.WriteToken(token), (token.ValidTo - DateTime.Now).TotalSeconds);
+        return new JwtAccessTokenModel(tokenHandler.WriteToken(token), (token.ValidTo - DateTime.UtcNow).TotalSeconds);
     }
 }

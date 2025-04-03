@@ -1,7 +1,11 @@
-﻿using Domain.Entities.User;
+﻿using Application.Contracts.User;
+using Domain.Entities.User;
 using Identity.IdentitySetup.Factories;
 using Identity.IdentitySetup.Stores;
+using Identity.Services.Implementations;
+using Identity.Services.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 
@@ -9,7 +13,7 @@ namespace Identity.Extensions;
 
 public static class IdentityServiceCollectionExtensions
 {
-    public static IServiceCollection AddIdentityServices(this IServiceCollection services)
+    public static IServiceCollection AddIdentityServices(this IServiceCollection services,IConfiguration configuration)
     {
         services.AddScoped<IUserClaimsPrincipalFactory<UserEntity>,AppUserClaimPrincipalFactory>();
         services.AddScoped<IRoleStore<RoleEntity>,AppRoleStore>();
@@ -39,6 +43,10 @@ public static class IdentityServiceCollectionExtensions
         .AddClaimsPrincipalFactory<AppUserClaimPrincipalFactory>()
         .AddDefaultTokenProviders()
         .AddEntityFrameworkStores<CleanDbContext>();
+
+        services.Configure<JwtConfiguration>(configuration.GetSection(nameof(JwtConfiguration)));
+        services.AddScoped<IJwtService,JwtServiceImplementation>();
+        services.AddScoped<IUserManager,UserManagerImplementation>();
 
         return services;
     }
