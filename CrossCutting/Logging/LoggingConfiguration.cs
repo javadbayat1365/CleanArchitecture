@@ -7,7 +7,8 @@ namespace CrossCutting.Logging;
 
 public class LoggingConfiguration
 {
-    public static Action<HostBuilderContext, LoggerConfiguration> ConfigureLogger = (context, configuration) => {
+    public static Action<HostBuilderContext, LoggerConfiguration> ConfigureLogger = (context, configuration) =>
+    {
 
         var applicationName = context.HostingEnvironment.ApplicationName;
 
@@ -26,7 +27,11 @@ public class LoggingConfiguration
         if (context.HostingEnvironment.IsProduction())
         {
             configuration.WriteTo.Console().MinimumLevel.Error();
-            //TODO add SEQ Sink Configuration
+            //TODO Run SEQ On Docker with 5341 port localhost
+            configuration.WriteTo.Seq(
+               serverUrl: "localhost:5341",
+               apiKey: "jl5k34j34j5lj34l5jl",
+               restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information);
         }
-    };    
+    };
 }
