@@ -45,7 +45,8 @@ public class IdentityTestSetup: IAsyncLifetime
             {"JwtConfiguration:SignInKey","ShouldBe-LongerThan-16Char-SecretKey" },
             {"JwtConfiguration:Audience","TestAud" },
             {"JwtConfiguration:Issuer","TestIssuer" },
-            {"JwtConfiguration:ExpirationMinute","60" }
+            {"JwtConfiguration:ExpirationMinute","60" },
+            {"JwtConfiguration:EncryptionKey","16CharEncryptKey" }
         };
 
         var configuratoinBuilder = new ConfigurationBuilder();
