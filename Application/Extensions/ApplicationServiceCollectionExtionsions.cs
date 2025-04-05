@@ -1,5 +1,7 @@
-﻿using Application.Common.Validation;
+﻿using Application.Common;
+using Application.Common.Validation;
 using FluentValidation;
+using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Extensions;
@@ -40,6 +42,18 @@ public static class ApplicationServiceCollectionExtionsions
 
             services.AddTransient(validatorInterfaces,_=> validator);
         }
+
+        return services;
+    }
+
+    public static IServiceCollection AddApplicationMediatorServices(this IServiceCollection services)
+    {
+        services.AddMediator(options => {
+            options.ServiceLifetime = ServiceLifetime.Transient;
+            options.Namespace = "CleanArchitecture.Application.GenerateMediatorServices";
+        });
+
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidateRequestBehavior<,>));
 
         return services;
     }
