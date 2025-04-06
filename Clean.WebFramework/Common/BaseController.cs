@@ -1,10 +1,14 @@
 ﻿using Application.Common;
+using Asp.Versioning;
 using Clean.WebFramework.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Clean.WebFramework.Common;
 
+[ApiController]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiversion}/[controller]")]
 public class BaseController:ControllerBase
 {
     protected string? UserName =>  User.Identity?.Name;
