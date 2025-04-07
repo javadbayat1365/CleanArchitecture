@@ -1,6 +1,8 @@
 ﻿using Asp.Versioning;
+using Clean.WebFramework.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -42,11 +44,28 @@ public static class ServiceCollectionExtensions
         }).AddJwtBearer(options =>
         {
             var validationParameters = new TokenValidationParameters() { 
-             ClockSkew = TimeSpan.Zero,
 
+             ClockSkew = TimeSpan.Zero,
              RequireSignedTokens = true,
+
              ValidateIssuerSigningKey = true,
              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signKey)),
+
+             ValidateIssuer = true,
+             ValidIssuer = issuer,
+
+             ValidateAudience =true,
+             ValidAudience = audience,
+
+             TokenDecryptionKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(encryptionKey))
+            };
+            options.TokenValidationParameters = validationParameters;
+
+            options.Events = new JwtBearerEvents() { 
+             OnForbidden = async context => {
+                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                 await context.Response.WriteAsJsonAsync(new ApiResult(false, "Forbidden", ApiResultStatusCode.Forbidden));
+              }
             };
         });
 
