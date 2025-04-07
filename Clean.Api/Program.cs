@@ -5,6 +5,7 @@ using CrossCutting.FileStorageService.Extensions;
 using CrossCutting.Logging;
 using Identity.Extensions;
 using Persistence;
+using Persistence.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,16 +20,15 @@ builder
 builder.Services
     .AddIdentityServices(builder.Configuration)
     .AddFileService(builder.Configuration)
+    .AddApplicationAutomapper()
     .AddApplicationMediatorServices()
-    //.AddApplicationAuthommapper()
     .RegisterApplicationValidators()
-    //.AddPersistenceDbContext()
-    ;
+    .AddPersistenceDbContext(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -37,6 +37,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
+    //app.mi
     app.UseSwaggerUI();
 }
 

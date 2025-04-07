@@ -77,6 +77,9 @@ internal class MinioStorageService(IMinioClient minioClient) : IFileService
             var fileName = $"{Guid.NewGuid():N}.{FileTypeValidator.GetFileType(memoryStream).Extension}";
 
             var fileType = !string.IsNullOrEmpty(file.FileContent) ? file.FileContent : "application/octet-stream";
+
+            memoryStream.Position = 0;
+
             var createFileArg = new PutObjectArgs()
                 .WithBucket(CleanBucketName)
                 .WithStreamData(memoryStream)

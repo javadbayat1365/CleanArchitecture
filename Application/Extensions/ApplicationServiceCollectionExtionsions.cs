@@ -1,4 +1,5 @@
 ﻿using Application.Common;
+using Application.Common.MappingConfiguration;
 using Application.Common.Validation;
 using FluentValidation;
 using Mediator;
@@ -57,4 +58,11 @@ public static class ApplicationServiceCollectionExtionsions
 
         return services;
     }
+
+    public static IServiceCollection AddApplicationAutomapper(this IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(RegisterApplicationMappers));
+        return services;
+    }
+
 }
