@@ -22,6 +22,8 @@ public class LoggingConfiguration
         if (context.HostingEnvironment.IsDevelopment())
         {
             configuration.WriteTo.Console().MinimumLevel.Information();
+            configuration.WriteTo.Seq(context.Configuration["Seq:Url"]!,Serilog.Events.LogEventLevel.Information,
+                apiKey: context.Configuration["Seq:ApiKey"]);
             return;
         }
         if (context.HostingEnvironment.IsProduction())
@@ -29,8 +31,8 @@ public class LoggingConfiguration
             configuration.WriteTo.Console().MinimumLevel.Error();
             //TODO Run SEQ On Docker with 5341 port localhost
             configuration.WriteTo.Seq(
-               serverUrl: "localhost:5341",
-               apiKey: "jl5k34j34j5lj34l5jl",
+               serverUrl: context.Configuration["Seq:Url"]!,
+               apiKey: context.Configuration["Seq:ApiKey"],
                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information);
         }
     };
