@@ -13,6 +13,6 @@ public static class WebApplicationExtensions
 
         var db = scope.ServiceProvider.GetRequiredService<CleanDbContext>();
 
-        await db.Database.MigrateAsync();
+        //await db.Database.MigrateAsync();
     }
 }

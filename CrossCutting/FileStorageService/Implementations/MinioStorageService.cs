@@ -1,12 +1,15 @@
 ﻿using Application.Contracts.FileService.Interfaces;
 using Application.Contracts.FileService.Models;
 using FileTypeChecker;
+using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using Minio.DataModel.Args;
+using System.Net.Security;
 
 namespace CrossCutting.FileStorageService.Implementations;
 
-internal class MinioStorageService(IMinioClient minioClient) : IFileService
+internal class MinioStorageService(IMinioClient minioClient,
+    [FromKeyedServices(key:"SasMinioClient")] IMinioClient sasClient) : IFileService
 {
     private const string CleanBucketName = "cleanfiles";
     private async Task CreateBucketIfMissing(CancellationToken token = default)
@@ -36,7 +39,7 @@ internal class MinioStorageService(IMinioClient minioClient) : IFileService
                 .WithObject(fileName)
                 .WithExpiry((int)TimeSpan.FromMinutes(30).TotalSeconds);
 
-            var fileUrl = await minioClient.PresignedGetObjectAsync(sasUrlArgs);
+            var fileUrl = await sasClient.PresignedGetObjectAsync(sasUrlArgs);
 
             result.Add(new GetFileModel(fileUrl, objectInfoResult.ContentType, objectInfoResult.ObjectName));
         }
@@ -58,11 +61,12 @@ internal class MinioStorageService(IMinioClient minioClient) : IFileService
             if (objectInfoResult is null) { continue; }
 
             filesToRemove.Add(fileName);
+
+            var removeFileArgs = new RemoveObjectArgs().WithBucket(CleanBucketName).WithObject(objectInfoResult.ObjectName);
+
+            await minioClient.RemoveObjectAsync(removeFileArgs,cancellationToken);
         }
 
-        var removeFileArgs = new RemoveObjectsArgs().WithBucket(CleanBucketName).WithObjects(filesToRemove);
-
-        await minioClient.RemoveObjectsAsync(removeFileArgs);
     }
 
     public async Task<List<SaveFileModelResult>> SaveFilesAsync(List<SaveFileModel> files, CancellationToken cancellationToken = default)

@@ -16,7 +16,15 @@ public static class FileStorageServiceCollectionExtensions
             .WithSSL(configuration.GetValue<bool>("Minio:UseSsl"));
         });
 
-        services.AddScoped<IFileService, MinioStorageService>(); 
+        services.AddScoped<IFileService, MinioStorageService>();
+
+
+        services.AddKeyedScoped<IMinioClient>("SasMiniioClient", (serviceProvicer,_) => {
+            var client = new MinioClient();
+            return client.WithEndpoint(configuration["Minio:SasEndpoint"])
+            .WithCredentials(configuration["Minio:AccessKey"], configuration["Minio:SecretKey"])
+            .WithSSL(configuration.GetValue<bool>("Minio:UseSsl"));
+        });
 
         return services;
     }
