@@ -12,7 +12,7 @@ public static class PersistenceServiceCollectionExtensions
     {
         services.AddDbContext<CleanDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("CleanDb"), builder =>
+            options.UseSqlServer(configuration.GetConnectionString("CleanArchDb"), builder =>
             {
 
                 builder.EnableRetryOnFailure();
