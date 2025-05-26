@@ -1,10 +1,9 @@
+using Clean.WebFramework.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clean.Api.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController : BaseController
     {
         private static readonly string[] Summaries = new[]
         {

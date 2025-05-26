@@ -3,11 +3,8 @@ using Clean.WebFramework.Extensions;
 using Clean.WebFramework.Filters;
 using Clean.WebFramework.Models;
 using Clean.WebFramework.Swagger;
-using CrossCutting.FileStorageService.Extensions;
-using CrossCutting.Logging;
 using Identity.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
 using Persistence.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,21 +12,19 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Host.UseSerilog(LoggingConfiguration.ConfigureLogger);
 // Add services to the container.
 
-builder
-    .AddSwagger(new string[] { "V1" })
-    .AddVersioning();
+
 
 builder.Services
     .AddIdentityServices(builder.Configuration)
-    .AddFileService(builder.Configuration)
+    //.AddFileService(builder.Configuration)
     .AddApplicationAutomapper()
-    .AddApplicationMediatorServices() 
+    .AddApplicationMediatorServices()  
     .RegisterApplicationValidators()
     .AddPersistenceDbContext(builder.Configuration);
 
 builder.ConfigureAuthenticationAndAuthorization();
 
-builder.Services.AddControllers(options =>
+builder.Services.AddControllers(options =>  
 {
     options.Filters.Add(typeof(OkResultAttribute));
     options.Filters.Add(typeof(NotFoundAttribute));
@@ -40,13 +35,16 @@ builder.Services.AddControllers(options =>
     options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ApiResult), StatusCodes.Status401Unauthorized));
     options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ApiResult), StatusCodes.Status403Forbidden));
     options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ApiResult), StatusCodes.Status500InternalServerError));
-}).ConfigureApiBehaviorOptions(options => { 
-   options.
 });
+//.ConfigureApiBehaviorOptions(options => { 
+//   //options.
+//});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
-
+builder
+    .AddSwagger(new string[] { "V1" })
+    .AddVersioning();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

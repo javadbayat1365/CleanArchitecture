@@ -8,7 +8,7 @@ using static Application.Features.Ad.Queries.GetAdById.GetAdDetailByIdQueryResul
 
 namespace Application.Features.Ad.Queries.GetAdById;
 
-public class GetAdByIdQueryHandler(IUnitOfWork unitOfWork,IFileService fileService,IMapper mapper) : IRequestHandler<GetAdDetailByIdQuery, OperationResult<GetAdDetailByIdQueryResult>>
+public class GetAdByIdQueryHandler(IUnitOfWork unitOfWork/*,IFileService fileService*/,IMapper mapper) : IRequestHandler<GetAdDetailByIdQuery, OperationResult<GetAdDetailByIdQueryResult>>
 {
     public async ValueTask<OperationResult<GetAdDetailByIdQueryResult>> Handle(GetAdDetailByIdQuery request, CancellationToken cancellationToken)
     {
@@ -17,11 +17,11 @@ public class GetAdByIdQueryHandler(IUnitOfWork unitOfWork,IFileService fileServi
         if (adEntity is null)
             return OperationResult<GetAdDetailByIdQueryResult>.NotFoundResult(nameof(GetAdDetailByIdQuery.AdId), "Ad Not Found!");
 
-        var adImages = await fileService.GetFilesByNameAsync(adEntity.Images.Select(s => s.FileName).ToList(),cancellationToken);
+        //var adImages = await fileService.GetFilesByNameAsync(adEntity.Images.Select(s => s.FileName).ToList(),cancellationToken);
 
         var result = mapper.Map<AdEntitiy,GetAdDetailByIdQueryResult>(adEntity);
 
-        result.AdImages = adImages.Select(s =>new AdDetailsImageModel(s.FileName,s.FileUrl)).ToArray();
+        //result.AdImages = adImages.Select(s =>new AdDetailsImageModel(s.FileName,s.FileUrl)).ToArray();
 
         return OperationResult<GetAdDetailByIdQueryResult>.SuccessResult(result);
     }

@@ -7,7 +7,7 @@ using Mediator;
 
 namespace Application.Features.Ad.Commands.EditAd;
 
-public sealed class EditAdCommandHandler(IUnitOfWork unitOfWork,IFileService fileService) : IRequestHandler<EditAdCommand, OperationResult<bool>>
+public sealed class EditAdCommandHandler(IUnitOfWork unitOfWork/*,IFileService fileService*/) : IRequestHandler<EditAdCommand, OperationResult<bool>>
 {
     public async ValueTask<OperationResult<bool>> Handle(EditAdCommand request, CancellationToken cancellationToken)
     {
@@ -35,22 +35,22 @@ public sealed class EditAdCommandHandler(IUnitOfWork unitOfWork,IFileService fil
         }
         editAd.Edit(request.Title,request.Description,request.categotyId.Value,request.locationId.Value);
 
-        if(request.RemovedImageNames.Any())
-        {
-            await fileService.RemoveFileAsync(request.RemovedImageNames,cancellationToken);
-            editAd.RemoveImages(request.RemovedImageNames);
-        }
+        //if(request.RemovedImageNames.Any())
+        //{
+        //    await fileService.RemoveFileAsync(request.RemovedImageNames,cancellationToken);
+        //    editAd.RemoveImages(request.RemovedImageNames);
+        //}
 
-        if (request.NewImages.Any())
-        {
-            foreach (var item in request.NewImages)
-            {
-                var savedImages = await fileService.SaveFilesAsync(new List<SaveFileModel>(
-                request.NewImages.Select(s => new SaveFileModel(s.ImagesContent , s.ImageType)).ToList()), cancellationToken);
+        //if (request.NewImages.Any())
+        //{
+        //    foreach (var item in request.NewImages)
+        //    {
+        //        var savedImages = await fileService.SaveFilesAsync(new List<SaveFileModel>(
+        //        request.NewImages.Select(s => new SaveFileModel(s.ImagesContent , s.ImageType)).ToList()), cancellationToken);
 
-                savedImages.ForEach(a => editAd.AddImage(new Domain.Common.ValueObjects.ImageValueObject(a.FileName, a.FileType)));
-            }
-        }
+        //        savedImages.ForEach(a => editAd.AddImage(new Domain.Common.ValueObjects.ImageValueObject(a.FileName, a.FileType)));
+        //    }
+        //}
 
         await unitOfWork.CommitAsync(cancellationToken);
 

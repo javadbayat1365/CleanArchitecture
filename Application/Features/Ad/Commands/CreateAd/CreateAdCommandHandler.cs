@@ -10,8 +10,9 @@ namespace Application.Features.Ad.Commands.CreateAd;
 
 public sealed class CreateAdCommandHandler(
     IUnitOfWork unitOfWork, 
-    IUserManager userManager, 
-    IFileService fileService) : IRequestHandler<CreateAdCommand, OperationResult<bool>>
+    IUserManager userManager
+    //, IFileService fileService
+    ) : IRequestHandler<CreateAdCommand, OperationResult<bool>>
 {
     public async ValueTask<OperationResult<bool>> Handle(CreateAdCommand request, CancellationToken cancellationToken)
     {
@@ -39,13 +40,13 @@ public sealed class CreateAdCommandHandler(
         {
             return OperationResult<bool>.FailureResult(e.Message);
         }
-        if (request.AdImages.Any())
-        {
-            var savedImages = await fileService.SaveFilesAsync(new List<SaveFileModel>(
-                 request.AdImages.Select(s => new SaveFileModel(s.Base64File, s.FileContent)).ToList()), cancellationToken);
+        //if (request.AdImages.Any())
+        //{
+        //    var savedImages = await fileService.SaveFilesAsync(new List<SaveFileModel>(
+        //         request.AdImages.Select(s => new SaveFileModel(s.Base64File, s.FileContent)).ToList()), cancellationToken);
 
-            savedImages.ForEach(a => createAd.AddImage(new Domain.Common.ValueObjects.ImageValueObject(a.FileName, a.FileType)));
-        }
+        //    savedImages.ForEach(a => createAd.AddImage(new Domain.Common.ValueObjects.ImageValueObject(a.FileName, a.FileType)));
+        //}
 
         await unitOfWork.AdRepository.CreateAdAsync(createAd);
 
